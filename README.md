@@ -7,7 +7,7 @@ Single HTML file, no build step and no dependencies.
 On desktop it renders inside a phone frame; on a phone it runs full screen.
 
 ## Screens
-- **Login** — mock email + password (any valid email works) or *Continue as guest*; the name before @ is used in the greeting
+- **Welcome page** — website-style landing: hero (*Student Living, Elevated*), Trustpilot rating, guarantees, search (city / university / residence → filtered residence list), featured residences, cities, offer band; *Log in* opens a bottom sheet (mock: any valid email works, the name before @ is used in the greeting) or *Continue as guest*
 - **Apply** — residence application form (same fields as the website's Quick Enquiry form), validation, confirmation + summary
 - **Home** — check-in countdown, quick actions, resident perks, The Common Room, blog articles
 - **My stay** — residence photo, check-in/out, arrival checklist, *Request an extension*

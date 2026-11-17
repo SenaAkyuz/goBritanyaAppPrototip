@@ -337,19 +337,79 @@ details.dev pre{margin:0;padding:0 14px 14px;font-size:11px;line-height:1.5;whit
   .tabbar{padding-bottom:max(10px,env(safe-area-inset-bottom))}
   .toast{bottom:calc(96px + env(safe-area-inset-bottom))}
 }
-/* ---------- Login ---------- */
-.login{flex:1;display:flex;flex-direction:column;background:#fff;overflow-y:auto;min-height:0}
-.login__top{display:flex;justify-content:flex-end;padding:10px 18px 0}
-.login__brand{background:linear-gradient(150deg,var(--navy) 0%,#1B2A72 100%);margin:12px 18px 0;border-radius:26px;padding:34px 22px 30px;color:#fff;position:relative;overflow:hidden}
-.login__brand::after{content:"";position:absolute;right:-50px;top:-50px;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(208,2,27,.6),rgba(208,2,27,0) 70%)}
-.login__brand .logo{font-size:40px;position:relative;z-index:1}
-.login__brand .logo .go{color:#fff}
-.login__brand p{margin:10px 0 0;font-size:16px;font-weight:600;opacity:.88;position:relative;z-index:1}
-.login__form{padding:26px 18px 30px}
-.login__form h1{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:0}
-.login__form>p{margin:6px 0 0;color:var(--muted);font-size:14.5px}
-.login__or{display:flex;align-items:center;gap:10px;margin:16px 0 12px;color:var(--muted);font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
-.login__or::before,.login__or::after{content:"";flex:1;height:1px;background:var(--line)}
+/* ---------- Landing (welcome) ---------- */
+.land{flex:1;overflow-y:auto;overflow-x:hidden;background:var(--bg);min-height:0;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding-bottom:30px}
+.land::-webkit-scrollbar{width:0}
+.land-bar{position:sticky;top:0;z-index:5;background:#fff;display:flex;align-items:center;gap:6px;padding:8px 12px 10px 18px;border-bottom:1px solid var(--line)}
+.land-bar .logo{font-size:22px;margin-right:auto}
+.qi{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:var(--navy);flex:none}
+.qi svg{width:21px;height:21px}
+.qi.wa{color:#1E8E4E}
+.land-bar .lang{margin-left:2px}
+.land-bar .lang button{min-width:32px;padding:6px 8px}
+.land-hero{position:relative;min-height:470px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:22px 18px 22px;overflow:hidden;background:var(--navy)}
+.land-hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.land-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,20,64,.35) 0%,rgba(11,20,64,.55) 45%,rgba(11,20,64,.92) 100%);z-index:1}
+.land-hero>*:not(img){position:relative;z-index:2}
+.tp{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;background:rgba(255,255,255,.14);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:600}
+.tp b{font-weight:800}
+.tp .star{color:#00B67A;font-size:15px;line-height:1}
+.land-hero h1{margin:16px 0 0;font-size:40px;line-height:1.04;font-weight:500;letter-spacing:-.03em}
+.land-hero h1 b{font-weight:800}
+.land-hero .sub{margin:10px 0 0;font-size:17px;line-height:1.35;opacity:.92}
+.badges{display:flex;gap:8px;overflow-x:auto;margin:16px -18px 0;padding:0 18px 2px;scrollbar-width:none}
+.badges::-webkit-scrollbar{display:none}
+.badges span{flex:none;display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:8px 13px;font-size:12.5px;font-weight:700}
+.badges svg{width:15px;height:15px;stroke-width:2.6;color:#9FE3BE}
+.lsearch{display:flex;align-items:center;gap:8px;background:#fff;color:var(--text);border-radius:999px;padding:6px 6px 6px 18px;margin-top:18px;box-shadow:0 14px 34px rgba(0,0,0,.28)}
+.lsearch label{flex:1;min-width:0;display:block;cursor:text}
+.lsearch label b{display:block;font-size:12px;font-weight:800;line-height:1.25}
+.lsearch input{display:block;width:100%;border:0;outline:none;padding:2px 0 0;font-size:16px;background:transparent;color:var(--text)}
+.lsearch input::placeholder{color:#8A90A6}
+.lsearch button{flex:none;display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;border-radius:999px;padding:14px 15px;font-weight:800;font-size:14.5px;align-self:stretch}
+.lsearch button svg{width:18px;height:18px;stroke-width:2.4}
+.auth{margin:-18px 18px 0;position:relative;z-index:3;background:#fff;border-radius:22px;box-shadow:var(--shadow);padding:16px}
+.auth p{margin:0 0 12px;font-size:14px;color:#3A4166;font-weight:600}
+.auth .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.auth .btn{min-height:50px;font-size:15.5px}
+.lsec{padding:0 18px;margin-top:28px}
+.lsec h2{margin:0 0 4px;font-size:22px;font-weight:800;letter-spacing:-.02em;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.lsec h2 button{font-size:13.5px;font-weight:700;color:var(--red)}
+.lsec .lead{margin:0 0 14px;color:var(--muted);font-size:14px;line-height:1.45}
+.fres{flex:0 0 246px;scroll-snap-align:start;background:#fff;border-radius:22px;box-shadow:var(--shadow);overflow:hidden;text-align:left;display:flex;flex-direction:column}
+.fres .ph{position:relative;height:150px;overflow:hidden}
+.fres .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.fres .bd{padding:12px 14px 14px}
+.fres b{display:block;font-size:16px;line-height:1.25}
+.fres small{display:flex;gap:4px;align-items:center;color:var(--muted);font-size:12.8px;margin-top:4px}
+.fres small svg{width:14px;height:14px}
+.fres .pr{margin-top:10px;font-size:13px;color:var(--muted)}
+.fres .pr b{display:inline;font-size:17px;color:var(--text)}
+.fres .pr .na{color:var(--navy);font-weight:700}
+.perksrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.perksrow span{display:flex;gap:8px;align-items:center;background:#fff;border-radius:14px;padding:11px 12px;font-size:13px;font-weight:700;box-shadow:var(--shadow)}
+.perksrow svg{width:17px;height:17px;color:var(--green);stroke-width:2.6;flex:none}
+.cities{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.city-btn{position:relative;height:96px;border-radius:18px;overflow:hidden;color:#fff;text-align:left;padding:12px 14px;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:var(--shadow)}
+.city-btn img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.city-btn::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,20,64,.1),rgba(11,20,64,.85));z-index:1}
+.city-btn b,.city-btn small{position:relative;z-index:2}
+.city-btn b{font-size:17px}
+.city-btn small{font-size:12.5px;opacity:.9}
+.offer-band{display:flex;align-items:center;gap:12px;margin:28px 18px 0;background:var(--red);color:#fff;border-radius:20px;padding:16px;box-shadow:0 10px 24px rgba(208,2,27,.25)}
+.offer-band .ri{width:42px;height:42px;border-radius:13px;background:rgba(255,255,255,.18);display:grid;place-items:center;flex:none}
+.offer-band b{display:block;font-size:15.5px}
+.offer-band small{display:block;font-size:13px;opacity:.92;margin-top:2px}
+.offer-band .go{margin-left:auto;font-weight:800;font-size:13.5px;white-space:nowrap;display:inline-flex;align-items:center}
+.offer-band .go svg{width:16px;height:16px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stats div{background:#fff;border-radius:16px;padding:12px 6px;text-align:center;box-shadow:var(--shadow)}
+.stats b{display:block;font-size:19px;font-weight:800;color:var(--navy)}
+.stats small{display:block;font-size:11px;color:var(--muted);font-weight:600;margin-top:2px;line-height:1.2}
+.land-foot{margin:28px 18px 0;padding:18px;border-radius:20px;background:var(--navy);color:#C9D1F5;font-size:13px;line-height:1.55}
+.land-foot .logo{font-size:22px;margin-bottom:8px}
+.land-foot .logo .go{color:#fff}
+.land-foot a{color:#fff;font-weight:700}
 .field.err,.has-err .field{border-color:var(--red);background:#FFF7F8}
 .errmsg{color:var(--red);font-size:12.8px;font-weight:600;margin:6px 0 0;display:flex;gap:5px;align-items:center}
 /* ---------- Apply CTA ---------- */
@@ -709,6 +769,15 @@ const I18N = {
   en: {
     tabHome: "Home", tabStay: "My stay", tabSupport: "Support",
     tabApply: "Apply", hiGuest: "Hi there", logout: "Log out",
+    outOf5: "out of 5", heroSub: "London Short & Long Stays from £159/week",
+    searchLabel: "Search by City, University, or Residence", searchPh: "Book your perfect place", searchBtn: "Search",
+    authLead: "Already a GoBritanya student? Log in to manage your stay.", guestShort: "Guest",
+    favorites: "Favorites", favNeedLogin: "Log in to save your favourite residences",
+    featured: "Featured residences", byCity: "Explore by city",
+    benefits: ["Flexible booking", "No added fees", "No deposit", "No UK guarantor", "Short & long stays", "Price Match Guarantee"],
+    offerSub: "Student rooms in London & Leeds", viewOffer: "View offer",
+    trusted: "Trusted by over 10,000 students annually", trustedSub: "Helping students find their home since 2013.",
+    stSince: "Since", stCities: "Cities", stRes: "Residences", stNat: "Nationalities",
     loginTag: "Student Living, Elevated", loginTitle: "Welcome back", loginSub: "Log in to manage your stay and applications.",
     email: "Email", password: "Password", login: "Log in", or: "or", guest: "Continue as guest",
     emailInvalid: "Please enter a valid email address",
@@ -797,6 +866,15 @@ const I18N = {
   tr: {
     tabHome: "Ana sayfa", tabStay: "Konaklamam", tabSupport: "Destek",
     tabApply: "Başvur", hiGuest: "Merhaba", logout: "Çıkış yap",
+    outOf5: "/ 5", heroSub: "Londra'da kısa ve uzun konaklama, haftalık £159'dan başlayan fiyatlarla",
+    searchLabel: "Şehir, üniversite veya rezidans ara", searchPh: "Sana uygun yeri bul", searchBtn: "Ara",
+    authLead: "Zaten GoBritanya öğrencisi misin? Konaklamanı yönetmek için giriş yap.", guestShort: "Misafir",
+    favorites: "Favoriler", favNeedLogin: "Favori rezidanslarını kaydetmek için giriş yap",
+    featured: "Öne çıkan rezidanslar", byCity: "Şehre göre keşfet",
+    benefits: ["Esnek rezervasyon", "Ek ücret yok", "Depozito yok", "İngiltere'de kefil gerekmez", "Kısa ve uzun konaklama", "Price Match Guarantee"],
+    offerSub: "London ve Leeds'te öğrenci odaları", viewOffer: "Teklifi gör",
+    trusted: "Her yıl 10.000'den fazla öğrencinin tercihi", trustedSub: "2013'ten beri öğrencilerin yuva bulmasına yardım ediyoruz.",
+    stSince: "Kuruluş", stCities: "Şehir", stRes: "Rezidans", stNat: "Uyruk",
     loginTag: "Student Living, Elevated", loginTitle: "Tekrar hoş geldin", loginSub: "Konaklamanı ve başvurularını yönetmek için giriş yap.",
     email: "E-posta", password: "Şifre", login: "Giriş yap", or: "veya", guest: "Misafir olarak devam et",
     emailInvalid: "Lütfen geçerli bir e-posta adresi gir",
@@ -1040,6 +1118,8 @@ const P = {
   card: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>',
   door: '<path d="M5 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17M3 21h18M13.5 12v.1"/>',
   dots: '<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>',
+  help: '<circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8 1c0 1.7-2.4 2.2-2.4 3.7M12 17.3v.1"/>',
+  gift: '<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v9h14v-9M12 8v13M12 8C10.5 4 7 4 7 6s2.5 2 5 2c2.5 0 5 0 5-2s-3.5-2-5 2z"/>',
   apply: '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M12 11v6M9 14h6"/>',
   user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
   extend: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/>'
@@ -1084,7 +1164,8 @@ function render(opts = {}) {
   const main = document.getElementById("main");
   const keep = opts.keepScroll && main ? main.scrollTop : 0;
   document.documentElement.lang = state.lang;
-  if (!state.session) { $app.innerHTML = screenLogin(); renderPitch(); return; }
+  if (!state.session) { const ls = document.querySelector(".land"), k = opts.keepScroll && ls ? ls.scrollTop : 0;
+    $app.innerHTML = screenLanding() + renderSheet(); const nl = document.querySelector(".land"); if (nl) nl.scrollTop = k; renderPitch(); return; }
   const top = nav.stack[nav.stack.length - 1];
   let title = null, body;
   if (!top) body = { home: screenHome, stay: screenStay, support: screenSupport }[nav.tab]();
@@ -1370,7 +1451,7 @@ function screenSupport() {
 function resList() {
   const q = ui.resQ.trim().toLowerCase();
   const items = APP_DATA.residences.filter(r => (ui.resCity === "all" || r.city === ui.resCity) &&
-    (!q || (r.name + " " + r.area + " " + r.address + " " + r.city).toLowerCase().includes(q)));
+    (!q || (r.name + " " + r.area + " " + r.address + " " + r.city + " " + (r.desc || "")).toLowerCase().includes(q)));
   if (!items.length) return `<div class="empty">${t("noResults")}</div>`;
   return `<p class="muted" style="font-size:13px;font-weight:600;margin:14px 2px 10px">${t("count", items.length)}</p>` + items.map(r => `
     <button class="card res" data-action="push" data-view="residence" data-id="${r.id}">
@@ -1416,27 +1497,103 @@ function screenResidence(id) {
 }
 
 /* ------------------------------ Login ------------------------------ */
-function screenLogin() {
-  return `<div class="login fadein">
-    <div class="login__top">${langToggle()}</div>
-    <div class="login__brand">
+// Featured on the website's home page ("Discover Our Residences")
+const FEATURED = ["aldgate-residence", "ealing-residence", "hammersmith-residence", "highbury-residence", "highbury-residence-ii", "brighton-residence", "point-campus-dublin", "briggate-studios"];
+const CITY_PHOTO = { London: "kirby-street-residence", Leeds: "briggate-studios", Brighton: "brighton-residence", Dublin: "point-campus-dublin" };
+function screenLanding() {
+  const c = APP_DATA.contacts;
+  const cityCount = city => APP_DATA.residences.filter(r => r.city === city).length;
+  return `<div class="land fadein">
+    <header class="land-bar">
       <div class="logo"><span class="go">Go</span><span class="br">Britanya</span></div>
-      <p>${t("loginTag")}</p>
+      <a class="qi wa" href="${waHref(c.whatsapp)}" target="_blank" rel="noopener" aria-label="WhatsApp">${ic("chat")}</a>
+      <button class="qi" data-action="landFav" aria-label="${t("favorites")}">${ic("heart")}</button>
+      <button class="qi" data-action="landQA" aria-label="Q&amp;A">${ic("help")}</button>
+      ${langToggle()}
+    </header>
+
+    <section class="land-hero">
+      ${photoImg("images/residences/wembley-arthur-house.jpg", IMG.room, "Wembley Arthur House")}
+      <span class="tp"><b>Excellent</b> 4.8 ${t("outOf5")} <span class="star">★</span> Trustpilot</span>
+      <h1>Student Living, <b>Elevated</b></h1>
+      <p class="sub">${t("heroSub")}</p>
+      <div class="badges">${["Price Match Guarantee", "Best Price Guarantee", "Flexible Contracts"].map(b => `<span>${ic("check")}${b}</span>`).join("")}</div>
+      <div class="lsearch">
+        <label for="landQ"><b>${t("searchLabel")}</b><input id="landQ" type="search" enterkeyhint="search" placeholder="${esc(t("searchPh"))}" autocomplete="off"></label>
+        <button data-action="landSearch">${ic("search")} ${t("searchBtn")}</button>
+      </div>
+    </section>
+
+    <div class="auth">
+      <p>${t("authLead")}</p>
+      <div class="row2">
+        <button class="btn btn--red" data-action="sheet" data-sheet="login">${ic("user")} ${t("login")}</button>
+        <button class="btn btn--ghost" data-action="guest">${t("guestShort")}</button>
+      </div>
     </div>
-    <div class="login__form">
-      <h1>${t("loginTitle")}</h1>
-      <p>${t("loginSub")}</p>
-      <label class="label" for="lgEmail">${t("email")}</label>
-      <input id="lgEmail" class="field ${ui.loginErr ? "err" : ""}" type="email" inputmode="email" autocomplete="email" placeholder="name@example.com" value="${esc(ui.loginEmail)}">
-      ${ui.loginErr ? `<p class="errmsg">${ic("alert")} ${t("emailInvalid")}</p>` : ""}
-      <label class="label" for="lgPass">${t("password")}</label>
-      <input id="lgPass" class="field" type="password" autocomplete="current-password" placeholder="••••••••">
-      <button class="btn btn--red" style="margin-top:22px" data-action="login">${t("login")}</button>
-      <div class="login__or">${t("or")}</div>
-      <button class="btn btn--ghost" data-action="guest">${t("guest")}</button>
+
+    <section class="lsec">
+      <h2>${t("featured")} <button data-action="landCity" data-city="all">${t("seeAll")}</button></h2>
+      <p class="lead">Flexible Booking · Short & Long-Term Stays · No Added Fees</p>
+      <div class="hscroll" style="margin:0 -18px;padding:4px 18px 12px">${FEATURED.map(id => resById(id)).map(r => `
+        <button class="fres" data-action="landRes" data-id="${r.id}">
+          <div class="ph">${resThumb(r)}</div>
+          <div class="bd"><b>${esc(r.name)}</b><small>${ic("pin")} ${esc(r.area)}, ${esc(r.city)}</small>
+            <div class="pr">${r.price ? `${t("from")} <b>£${r.price}</b>${t("wk")}` : `<span class="na">${t("priceAsk")}</span>`}</div></div>
+        </button>`).join("")}</div>
+    </section>
+
+    <section class="lsec" style="margin-top:16px">
+      <div class="perksrow">${I18N[state.lang].benefits.map(b => `<span>${ic("check")}${b}</span>`).join("")}</div>
+    </section>
+
+    <section class="lsec">
+      <h2>${t("byCity")}</h2>
+      <div class="cities">${["London", "Leeds", "Brighton", "Dublin"].map(city => `
+        <button class="city-btn" data-action="landCity" data-city="${city}">
+          ${photoImg(resById(CITY_PHOTO[city]).photo, "", city)}
+          <b>${city}</b><small>${t("count", cityCount(city))}</small>
+        </button>`).join("")}</div>
+    </section>
+
+    <a class="offer-band" href="${SITE}/special-offers/big-savings-flat-rate" target="_blank" rel="noopener">
+      <span class="ri">${ic("gift")}</span>
+      <span><b>Big Savings. Flat Rate.</b><small>${t("offerSub")}</small></span>
+      <span class="go">${t("viewOffer")} ${ic("chev")}</span>
+    </a>
+
+    <section class="lsec">
+      <h2>${t("trusted")}</h2>
+      <p class="lead">${t("trustedSub")}</p>
+      <div class="stats">
+        <div><b>2013</b><small>${t("stSince")}</small></div>
+        <div><b>4</b><small>${t("stCities")}</small></div>
+        <div><b>30+</b><small>${t("stRes")}</small></div>
+        <div><b>150+</b><small>${t("stNat")}</small></div>
+      </div>
+    </section>
+
+    <div class="land-foot">
+      <div class="logo"><span class="go">Go</span><span class="br">Britanya</span></div>
+      ${esc(c.address)}<br>
+      <a href="${telHref(c.office)}">${c.office}</a> · <a href="mailto:${c.emailBook}">${c.emailBook}</a><br>
+      ${t("sosTitle")}: <a href="${telHref(c.emergency)}">${c.emergency}</a>
     </div>
   </div>`;
 }
+function loginSheet() {
+  return `<h3>${t("loginTitle")}</h3><p class="sub">${t("loginSub")}</p>
+    <label class="label" for="lgEmail">${t("email")}</label>
+    <input id="lgEmail" class="field ${ui.loginErr ? "err" : ""}" type="email" inputmode="email" autocomplete="email" placeholder="name@example.com" value="${esc(ui.loginEmail)}">
+    ${ui.loginErr ? `<p class="errmsg">${ic("alert")} ${t("emailInvalid")}</p>` : ""}
+    <label class="label" for="lgPass">${t("password")}</label>
+    <input id="lgPass" class="field" type="password" autocomplete="current-password" placeholder="••••••••">
+    <div class="actions">
+      <button class="btn btn--red" data-action="login">${t("login")}</button>
+      <button class="btn btn--ghost" data-action="guest">${t("guest")}</button>
+    </div>`;
+}
+function enterAsGuest() { if (!state.session) { state.session = { mode: "guest", email: null, firstName: "" }; ui.app = blankApp(); } ui.sheet = null; }
 
 /* --------------------------- Application --------------------------- */
 const CITIES = [...new Set(APP_DATA.residences.map(r => r.city))];
@@ -1567,6 +1724,7 @@ function screenAppDone(id) {
 function renderSheet() {
   if (!ui.sheet) return "";
   let inner = "";
+  if (ui.sheet === "login") inner = loginSheet();
   if (ui.sheet === "arrival") {
     const a = state.arrival || { date: APP_DATA.student.contractStart, time: "15:00" };
     inner = `<h3>${t("arrTitle")}</h3><p class="sub">${t("arrSub")}</p>
@@ -1692,11 +1850,22 @@ document.addEventListener("click", e => {
     case "login": {
       const email = (document.getElementById("lgEmail").value || "").trim();
       ui.loginEmail = email;
-      if (!/^\S+@\S+\.\S+$/.test(email)) { ui.loginErr = true; render(); document.getElementById("lgEmail").focus(); return; }
+      if (!/^\S+@\S+\.\S+$/.test(email)) { ui.loginErr = true; render({ keepScroll: true }); document.getElementById("lgEmail").focus(); return; }
       state.session = { mode: "user", email, firstName: nameFromEmail(email) };
-      ui.loginErr = false; ui.app = blankApp(); go("home"); break;
+      ui.loginErr = false; ui.sheet = null; ui.app = blankApp(); go("home"); break;
     }
-    case "guest": state.session = { mode: "guest", email: null, firstName: "" }; ui.loginErr = false; ui.app = blankApp(); go("home"); break;
+    case "guest": state.session = { mode: "guest", email: null, firstName: "" }; ui.loginErr = false; ui.sheet = null; ui.app = blankApp(); go("home"); break;
+    case "landSearch": {
+      const q = (document.getElementById("landQ").value || "").trim();
+      const city = CITIES.find(c => c.toLowerCase() === q.toLowerCase());
+      enterAsGuest(); ui.resCity = city || "all"; ui.resQ = city ? "" : q;
+      nav.tab = "home"; nav.stack = [{ name: "explore" }]; render({ anim: true }); break;
+    }
+    case "landCity": enterAsGuest(); ui.resCity = el.dataset.city; ui.resQ = ""; nav.tab = "home"; nav.stack = [{ name: "explore" }]; render({ anim: true }); break;
+    case "landRes": enterAsGuest(); nav.tab = "home"; nav.stack = [{ name: "residence", id: el.dataset.id }]; render({ anim: true }); break;
+    case "landQA": enterAsGuest(); nav.tab = "support"; nav.stack = []; render({ anim: true });
+      setTimeout(() => { const f = document.getElementById("faqSearch"); if (f) document.getElementById("main").scrollTop = f.getBoundingClientRect().top - 140; }, 0); break;
+    case "landFav": ui.sheet = "login"; render({ keepScroll: true }); toast(t("favNeedLogin"), "alert"); break;
     case "logout": state.session = null; nav.tab = "home"; nav.stack = []; ui = freshUi(); render({ anim: true }); break;
     case "applyFor": {
       const r = resById(el.dataset.id);
@@ -1752,6 +1921,7 @@ document.addEventListener("change", e => {   // selects/checkboxes on older brow
   }
 });
 document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && e.target.id === "landQ") { e.preventDefault(); document.querySelector('[data-action="landSearch"]').click(); return; }
   if (e.key === "Enter" && (e.target.id === "lgEmail" || e.target.id === "lgPass")) { e.preventDefault(); document.querySelector('[data-action="login"]').click(); }
 });
 window.addEventListener("resize", renderPitch);
