@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B1440">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="GoBritanya">
+<title>GoBritanya — Student App (Prototype)</title>
+<style>
+:root{
+  --navy:#0B1440; --navy-2:#1A2560; --red:#D0021B; --red-2:#E8132E; --red-tint:#FDECEE;
+  --bg:#F4F5F9; --card:#FFFFFF; --text:#0B1440; --muted:#69708A; --line:#E6E8F0;
+  --green:#1E8E4E; --green-tint:#E6F6EC; --amber:#9A6A00; --amber-tint:#FFF4D6;
+  --r-lg:22px; --r-md:16px; --r-sm:12px;
+  --shadow:0 1px 2px rgba(11,20,64,.05),0 6px 20px rgba(11,20,64,.06);
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Inter,Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:var(--font);color:var(--text);background:#E9EBF2;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+a{color:inherit;text-decoration:none}
+input,textarea,select{font:inherit;color:inherit}
+svg.i{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- Stage & device frame (desktop) ---------- */
+.stage{min-height:100%;display:flex;align-items:center;justify-content:center;gap:56px;padding:12px 24px}
+.pitch{max-width:340px;display:none}
+.pitch .logo{font-size:40px}
+.pitch h2{font-size:22px;margin:18px 0 4px;font-weight:800;letter-spacing:-.02em}
+.pitch .ver{color:var(--muted);font-size:14px;margin:0 0 22px}
+.pitch ol{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.pitch li{display:flex;gap:12px;align-items:flex-start;font-size:14.5px;line-height:1.45;color:#2A3156}
+.pitch li b{display:block;color:var(--navy);font-size:15px}
+.pitch li .n{flex:none;width:28px;height:28px;border-radius:9px;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px}
+.pitch .src{margin-top:22px;font-size:12.5px;color:var(--muted);line-height:1.5}
+.pitch .reset{margin-top:14px;font-size:13px;font-weight:600;color:var(--red)}
+@media (min-width:1000px){.pitch{display:block}}
+
+.device{width:390px;height:844px;border-radius:58px;background:#0E0F13;padding:11px;box-shadow:0 0 0 2px #2b2d33,0 40px 80px rgba(11,20,64,.25);flex:none;position:relative}
+.screen{position:relative;width:100%;height:100%;border-radius:47px;overflow:hidden;overflow:clip;background:var(--bg);display:flex;flex-direction:column;isolation:isolate}
+.statusbar{height:50px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 30px 8px 34px;font-weight:600;font-size:15px;background:#fff;position:relative;z-index:5}
+.statusbar .island{position:absolute;left:50%;top:11px;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#000}
+.statusbar .sys{display:flex;gap:6px;align-items:center}
+.statusbar .sys svg{height:12px;width:auto;fill:var(--text)}
+@media (max-width:520px){
+  body{background:var(--bg)}
+  .stage{padding:0;display:block;min-height:100%}
+  .device{width:100%;height:100dvh;border-radius:0;padding:0;box-shadow:none;background:var(--bg)}
+  .screen{border-radius:0}
+  .statusbar{display:none}
+  .appbar{padding-top:calc(env(safe-area-inset-top) + 10px)!important}
+}
+
+/* ---------- App shell ---------- */
+#app{flex:1;display:flex;flex-direction:column;min-height:0;position:relative;overflow:hidden;overflow:clip}
+.appbar{flex:none;background:#fff;padding:6px 18px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative;z-index:4;border-bottom:1px solid transparent}
+.appbar.scrolled{border-bottom-color:var(--line)}
+.logo{font-weight:800;letter-spacing:-.035em;font-size:23px;line-height:1}
+.logo .go{color:var(--navy)} .logo .br{color:var(--red)}
+.appbar .title{font-weight:700;font-size:17px;flex:1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--bg);flex:none}
+.lang{display:flex;background:var(--bg);border-radius:999px;padding:3px;flex:none}
+.lang button{font-size:12.5px;font-weight:700;padding:6px 10px;border-radius:999px;color:var(--muted);min-width:38px;text-align:center}
+.lang button.on{background:var(--navy);color:#fff}
+.main{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:28px;scroll-behavior:auto}
+.main::-webkit-scrollbar{width:0}
+.pad{padding:0 18px}
+.sec{margin-top:26px}
+.eyebrow{margin:16px 0 2px;color:var(--muted);font-size:14px;font-weight:600}
+.h1{font-size:32px;line-height:1.08;font-weight:800;letter-spacing:-.03em;margin:4px 0 0}
+.h2{font-size:24px;font-weight:800;letter-spacing:-.02em;margin:0}
+.h3{font-size:19px;font-weight:800;letter-spacing:-.015em;margin:0 0 12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.h3 small{font-size:13px;color:var(--muted);font-weight:600}
+.muted{color:var(--muted)}
+.sample{display:inline-flex;align-items:center;vertical-align:middle;font-size:10.5px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:#7A5A00;background:var(--amber-tint);border:1px dashed #E2C266;border-radius:6px;padding:2px 6px;margin-left:6px;white-space:nowrap}
+.card{background:var(--card);border-radius:var(--r-lg);box-shadow:var(--shadow)}
+
+/* ---------- Tab bar ---------- */
+.tabbar{flex:none;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);padding:0 10px calc(env(safe-area-inset-bottom) + 22px);position:relative;z-index:4}
+.tab{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 2px;font-size:12px;font-weight:600;color:#3A4166;position:relative}
+.tab.on{color:var(--red)}
+.tab.on::before{content:"";position:absolute;top:-1px;left:22%;right:22%;height:3px;border-radius:0 0 3px 3px;background:var(--red)}
+.homebar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:#0E0F13}
+@media (max-width:520px){.homebar{display:none}}
+
+/* ---------- Buttons ---------- */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:54px;border-radius:14px;font-weight:700;font-size:16.5px;transition:transform .12s ease,opacity .12s}
+.btn:active{transform:scale(.98)}
+.btn--red{background:var(--red);color:#fff;box-shadow:0 6px 16px rgba(208,2,27,.25)}
+.btn--navy{background:var(--navy);color:#fff}
+.btn--ghost{background:#fff;color:var(--navy);border:1.5px solid var(--line)}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.link{color:var(--red);font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:4px}
+
+/* ---------- Home ---------- */
+.stay-card{display:block;width:100%;margin-top:16px;background:linear-gradient(135deg,var(--navy) 0%,#1B2A72 100%);color:#fff;border-radius:var(--r-lg);padding:18px 18px 16px;position:relative;overflow:hidden;box-shadow:0 12px 30px rgba(11,20,64,.25)}
+.stay-card::after{content:"";position:absolute;right:-40px;top:-40px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(208,2,27,.55),rgba(208,2,27,0) 70%)}
+.stay-card .top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;font-weight:700;font-size:12.5px;padding:6px 11px}
+.pill--glass{background:rgba(255,255,255,.14);color:#fff}
+.stay-card h2{margin:14px 0 2px;font-size:24px;font-weight:800;letter-spacing:-.02em;position:relative;z-index:1}
+.stay-card p{margin:0;opacity:.8;font-size:14.5px;position:relative;z-index:1}
+.stay-card .meta{display:flex;gap:8px;align-items:center;margin-top:14px;font-size:14px;font-weight:600;position:relative;z-index:1}
+.stay-card .meta svg{width:18px;height:18px}
+.bar{height:6px;border-radius:6px;background:rgba(255,255,255,.18);margin-top:14px;overflow:hidden;position:relative;z-index:1}
+.bar>div{height:100%;background:#fff;border-radius:6px;transition:width .4s ease}
+.stay-card small{display:block;margin-top:8px;font-size:12.5px;opacity:.85;position:relative;z-index:1}
+.qa{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.qa a,.qa button{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:12px;font-weight:600;text-align:center;line-height:1.2;color:#2A3156}
+.qa .ico{width:58px;height:58px;border-radius:18px;background:#fff;box-shadow:var(--shadow);display:grid;place-items:center;color:var(--navy)}
+.qa .ico.red{background:var(--red);color:#fff;box-shadow:0 6px 14px rgba(208,2,27,.25)}
+.hscroll{display:flex;gap:12px;overflow-x:auto;padding:4px 18px 10px;margin:0 -18px;scroll-snap-type:x mandatory}
+.hscroll::-webkit-scrollbar{display:none}
+.perk{flex:0 0 238px;scroll-snap-align:start;border-radius:var(--r-lg);padding:16px;color:#fff;display:flex;flex-direction:column;min-height:178px;position:relative;overflow:hidden}
+.perk .tag{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+.perk h4{margin:8px 0 6px;font-size:18px;line-height:1.2;font-weight:800;letter-spacing:-.01em}
+.perk p{margin:0;font-size:13px;line-height:1.4;opacity:.9}
+.perk .foot{margin-top:auto;padding-top:12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.code{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border:1px dashed rgba(255,255,255,.6);border-radius:10px;padding:7px 10px;font-weight:800;font-size:13px;letter-spacing:.04em}
+.code svg{width:15px;height:15px}
+.perk .more{font-size:12.5px;font-weight:700;display:inline-flex;align-items:center;gap:2px;opacity:.95}
+.perk .more svg{width:15px;height:15px}
+.perk.p1{background:linear-gradient(140deg,#D0021B,#8E0013)}
+.perk.p2{background:linear-gradient(140deg,#0B1440,#28408F)}
+.perk.p3{background:linear-gradient(140deg,#1C6B5A,#0F3F36)}
+.perk.p4{background:linear-gradient(140deg,#5B2A86,#2E1450)}
+.community{padding:16px}
+.community .head{display:flex;gap:12px;align-items:center}
+.community .badge{width:46px;height:46px;border-radius:14px;background:var(--red-tint);color:var(--red);display:grid;place-items:center;flex:none}
+.community h4{margin:0;font-size:16.5px;font-weight:800}
+.community p{margin:2px 0 0;font-size:13.5px;color:var(--muted);line-height:1.4}
+.groups{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.group{background:var(--bg);border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.3}
+.group b{display:block;font-size:13.5px;margin-bottom:2px}
+.event{display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.event .date{width:48px;flex:none;border-radius:12px;background:var(--navy);color:#fff;text-align:center;padding:6px 0;line-height:1.05}
+.event .date b{display:block;font-size:18px}
+.event .date span{font-size:11px;text-transform:uppercase;font-weight:700;opacity:.8}
+.event .t{font-weight:700;font-size:14.5px}
+.event .s{font-size:12.5px;color:var(--muted)}
+.blog{display:flex;gap:12px;padding:12px;align-items:stretch}
+.blog+.blog{margin-top:10px}
+.blog .thumb{width:92px;flex:none;border-radius:14px;overflow:hidden;position:relative;min-height:92px;background:var(--navy)}
+.blog .thumb img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0}
+.blog .thumb .gl{position:absolute;inset:0;display:grid;place-items:center;color:#fff}
+.blog .thumb .gl svg{width:34px;height:34px;stroke-width:1.5}
+.blog .k{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
+.blog h4{margin:4px 0 4px;font-size:15px;line-height:1.25;font-weight:800}
+.blog p{margin:0;font-size:12.8px;line-height:1.4;color:var(--muted)}
+.blog .rd{margin-top:6px;font-size:12px;font-weight:700;color:var(--navy);display:inline-flex;align-items:center;gap:3px}
+.blog .rd svg{width:14px;height:14px}
+
+/* ---------- My stay ---------- */
+.photo{position:relative;border-radius:var(--r-lg);overflow:hidden;aspect-ratio:16/11;background:var(--navy);box-shadow:var(--shadow)}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.photo .ptag{position:absolute;left:10px;bottom:10px;background:rgba(11,20,64,.62);backdrop-filter:blur(6px);color:#fff;font-size:11px;font-weight:700;padding:4px 8px;border-radius:8px}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.fact{background:#fff;border-radius:14px;padding:10px 12px;box-shadow:var(--shadow)}
+.fact span{display:block;font-size:11.5px;color:var(--muted);font-weight:600}
+.fact b{display:block;font-size:14.5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.checklist{list-style:none;margin:0;padding:0;background:#fff;border-radius:var(--r-md);box-shadow:var(--shadow);overflow:hidden}
+.checklist li+li{border-top:1px solid var(--line)}
+.ck{display:flex;align-items:center;gap:13px;width:100%;padding:14px 14px;min-height:62px}
+.ck .box{width:26px;height:26px;border-radius:50%;border:2px solid #C3C8D8;display:grid;place-items:center;flex:none;transition:all .2s}
+.ck .box svg{width:15px;height:15px;stroke:#fff;stroke-width:3;opacity:0;transform:scale(.4);transition:all .2s}
+.ck.done .box{background:var(--green);border-color:var(--green)}
+.ck.done .box svg{opacity:1;transform:scale(1)}
+.ck .txt{flex:1;min-width:0}
+.ck .txt b{display:block;font-size:15px;font-weight:600}
+.ck.done .txt b{color:#4A5170}
+.ck .txt small{display:block;font-size:12.5px;color:var(--muted);margin-top:2px;line-height:1.35}
+.ck .txt small.ok{color:var(--green);font-weight:600}
+.ck>svg.i{color:#B6BBCC;width:18px;height:18px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600;color:#2A3156}
+.chip svg{width:16px;height:16px;color:var(--green)}
+.row{display:flex;align-items:center;gap:12px;padding:14px;min-height:60px;width:100%}
+.row+.row{border-top:1px solid var(--line)}
+.row .ri{width:40px;height:40px;border-radius:12px;background:var(--bg);display:grid;place-items:center;flex:none;color:var(--navy)}
+.row .ri svg{width:20px;height:20px}
+.row .rt{flex:1;min-width:0}
+.row .rt b{display:block;font-size:15px;font-weight:700}
+.row .rt small{display:block;font-size:12.8px;color:var(--muted);margin-top:1px;line-height:1.35}
+.row>svg.i{color:#B6BBCC;width:18px;height:18px}
+
+/* ---------- Forms ---------- */
+.label{display:block;font-size:14px;font-weight:700;margin:22px 0 10px}
+.stepper{display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:var(--r-md);box-shadow:var(--shadow);padding:10px}
+.stepper button{width:52px;height:52px;border-radius:14px;background:var(--bg);display:grid;place-items:center;color:var(--navy)}
+.stepper button svg{width:22px;height:22px;stroke-width:2.4}
+.stepper output{text-align:center;font-size:34px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.stepper output small{display:block;font-size:13px;font-weight:600;color:var(--muted);letter-spacing:0;margin-top:4px}
+.seg{display:flex;gap:8px;margin-top:10px}
+.seg button{flex:1;padding:10px 0;border-radius:12px;background:#fff;border:1.5px solid var(--line);font-weight:700;font-size:14px;text-align:center}
+.seg button.on{border-color:var(--navy);background:var(--navy);color:#fff}
+.dates{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin-top:16px;padding:14px}
+.dates span{display:block;font-size:12px;color:var(--muted);font-weight:600}
+.dates b{display:block;font-size:15.5px;margin-top:3px}
+.dates .arrow{color:var(--muted)}
+.dates .new b{color:var(--red)}
+.field{width:100%;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:13px 14px;font-size:16px;outline:none;transition:border-color .15s}
+.field:focus{border-color:var(--navy)}
+textarea.field{min-height:96px;resize:none;line-height:1.4}
+.info{display:flex;gap:10px;background:#EEF1FB;border-radius:14px;padding:12px 14px;font-size:13.2px;line-height:1.45;color:#2A3156;margin-top:16px}
+.info svg{width:20px;height:20px;color:var(--navy);margin-top:1px}
+.info.warn{background:var(--amber-tint);color:#5E4600}
+.info.warn svg{color:var(--amber)}
+.mini-res{display:flex;gap:12px;align-items:center;padding:12px}
+.mini-res .th{width:56px;height:56px;border-radius:14px;overflow:hidden;flex:none}
+.mini-res .th img{width:100%;height:100%;object-fit:cover}
+.mini-res b{display:block;font-size:16px}
+.mini-res small{color:var(--muted);font-size:13px}
+
+/* ---------- Confirmation ---------- */
+.success{text-align:center;padding:26px 18px 6px}
+.success .tick{width:84px;height:84px;margin:0 auto 16px;border-radius:50%;background:var(--green);display:grid;place-items:center;box-shadow:0 0 0 10px var(--green-tint);animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
+.success .tick svg{width:42px;height:42px;stroke:#fff;stroke-width:3}
+.success h1{margin:0;font-size:28px;font-weight:800;letter-spacing:-.02em}
+.success p{margin:8px auto 0;max-width:290px;color:var(--muted);font-size:15px;line-height:1.45}
+@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+.req{padding:16px;margin-top:20px;border-left:4px solid var(--red)}
+.req .hd{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.req h3{margin:0;font-size:19px;font-weight:800}
+.req ul{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:10px}
+.req li{display:flex;gap:10px;align-items:center;font-size:15px}
+.req li svg{width:20px;height:20px;color:var(--navy)}
+.req .id{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+.req .id b{color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px}
+.status{display:inline-flex;align-items:center;border-radius:999px;font-weight:700;font-size:12.5px;padding:5px 11px;white-space:nowrap}
+.status.new{background:var(--red-tint);color:var(--red)}
+.status.in_review{background:var(--amber-tint);color:var(--amber)}
+.status.resolved{background:var(--green-tint);color:var(--green)}
+.timeline{list-style:none;margin:18px 0 0;padding:0 0 0 4px}
+.timeline li{display:flex;gap:12px;position:relative;padding-bottom:16px}
+.timeline li:last-child{padding-bottom:0}
+.timeline li::before{content:"";position:absolute;left:11px;top:24px;bottom:0;width:2px;background:var(--line)}
+.timeline li:last-child::before{display:none}
+.timeline .dot{width:24px;height:24px;border-radius:50%;border:2px solid #C3C8D8;background:#fff;flex:none;display:grid;place-items:center;position:relative;z-index:1}
+.timeline .dot svg{width:13px;height:13px;stroke:#fff;stroke-width:3}
+.timeline li.done .dot{background:var(--green);border-color:var(--green)}
+.timeline li.cur .dot{border-color:var(--amber);box-shadow:0 0 0 4px var(--amber-tint)}
+.timeline li.done::before{background:var(--green)}
+.timeline b{display:block;font-size:14.5px}
+.timeline small{color:var(--muted);font-size:12.5px}
+details.dev{margin-top:16px;background:#0E1330;color:#C9D1F5;border-radius:14px;overflow:hidden}
+details.dev summary{cursor:pointer;padding:12px 14px;font-size:13px;font-weight:700;color:#fff;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details.dev summary::-webkit-details-marker{display:none}
+details.dev summary::after{content:"+";font-size:18px;opacity:.7}
+details.dev[open] summary::after{content:"–"}
+details.dev pre{margin:0;padding:0 14px 14px;font-size:11px;line-height:1.5;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.demo{display:block;margin:12px auto 0;font-size:12.5px;font-weight:700;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- Support ---------- */
+.sos{display:flex;align-items:center;gap:14px;padding:16px;border-radius:var(--r-lg);background:linear-gradient(135deg,#D0021B,#9E0016);color:#fff;box-shadow:0 10px 24px rgba(208,2,27,.25);margin-top:16px}
+.sos .ri{width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.18);display:grid;place-items:center;flex:none}
+.sos b{display:block;font-size:16px}
+.sos small{display:block;font-size:13px;opacity:.88;margin-top:1px}
+.sos .num{font-size:14px;font-weight:800;margin-top:4px;letter-spacing:.01em}
+.sos .call{margin-left:auto;background:#fff;color:var(--red);border-radius:999px;padding:9px 14px;font-weight:800;font-size:14px;flex:none}
+.reqrow{display:flex;align-items:center;gap:12px;padding:13px 14px;width:100%}
+.reqrow+.reqrow{border-top:1px solid var(--line)}
+.reqrow .rt{flex:1;min-width:0}
+.reqrow .rt b{display:block;font-size:14.5px}
+.reqrow .rt small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.empty{padding:18px;text-align:center;color:var(--muted);font-size:14px}
+.search{position:relative}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:19px;height:19px;color:var(--muted)}
+.search input{padding-left:42px}
+.filter{display:flex;gap:8px;overflow-x:auto;margin:12px -18px 0;padding:0 18px 4px}
+.filter::-webkit-scrollbar{display:none}
+.filter button{flex:none;padding:8px 14px;border-radius:999px;background:#fff;border:1.5px solid var(--line);font-weight:700;font-size:13.5px;color:#2A3156}
+.filter button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.filter button small{opacity:.65;font-weight:600;margin-left:3px}
+.faq{margin-top:12px}
+.faq details{border-top:1px solid var(--line)}
+.faq details:first-child{border-top:0}
+.faq summary{list-style:none;cursor:pointer;padding:15px 14px;display:flex;gap:10px;align-items:center;font-weight:700;font-size:14.8px;line-height:1.3}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary span{flex:1}
+.faq summary svg{width:18px;height:18px;color:var(--muted);transition:transform .2s;flex:none}
+.faq details[open] summary svg{transform:rotate(90deg)}
+.faq .ans{padding:0 14px 15px;font-size:14px;line-height:1.5;color:#3A4166}
+.faq .ans a{color:var(--red);font-weight:600}
+.reset-link{display:block;margin:26px auto 0;color:var(--muted);font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- Explore ---------- */
+.illo{position:relative;overflow:hidden}
+.illo svg{position:absolute;inset:auto 0 0 0;width:100%;height:78%}
+.illo .city{position:absolute;left:10px;top:10px;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.18);padding:3px 7px;border-radius:6px}
+.res{display:flex;gap:12px;padding:10px;width:100%;align-items:stretch}
+.res+.res{margin-top:10px}
+.res .th{width:100px;min-height:96px;border-radius:14px;overflow:hidden;flex:none;position:relative}
+.res .th img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;z-index:1}
+.res .rt{flex:1;min-width:0;display:flex;flex-direction:column;padding:2px 2px 2px 0}
+.res .rt b{font-size:15.5px;line-height:1.25}
+.res .rt small{color:var(--muted);font-size:12.8px;margin-top:3px;display:flex;gap:4px;align-items:center}
+.res .rt small svg{width:14px;height:14px}
+.res .price{margin-top:auto;padding-top:8px;font-size:13px;color:var(--muted)}
+.res .price b{font-size:16px;color:var(--text)}
+.res .price .so{color:var(--red);font-weight:700}
+.res .price .na{color:var(--navy);font-weight:700}
+.hero{position:relative;height:240px;overflow:hidden}
+.hero img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;z-index:1}
+.hero .illo{position:absolute;inset:0}
+.hero .ptag{position:absolute;right:12px;bottom:12px;background:rgba(11,20,64,.62);color:#fff;font-size:11px;font-weight:700;padding:4px 8px;border-radius:8px}
+.detail{background:var(--bg);border-radius:24px 24px 0 0;margin-top:-22px;position:relative;padding-top:20px}
+.addr{display:flex;gap:6px;align-items:flex-start;color:var(--muted);font-size:14px;margin-top:8px;line-height:1.4}
+.addr svg{width:18px;height:18px;margin-top:1px}
+.pricebox{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;margin-top:16px}
+.pricebox span{font-size:13px;color:var(--muted)}
+.pricebox b{font-size:22px;font-weight:800}
+.desc{font-size:15px;line-height:1.55;color:#2A3156;margin:16px 0 0}
+
+/* ---------- Sheet & toast ---------- */
+.sheet-wrap{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end}
+.scrim{position:absolute;inset:0;background:rgba(11,20,64,.42);animation:fade .2s ease}
+.sheet{position:relative;background:#fff;border-radius:26px 26px 0 0;padding:10px 18px calc(env(safe-area-inset-bottom) + 26px);max-height:88%;overflow-y:auto;animation:up .28s cubic-bezier(.2,.9,.3,1)}
+.sheet .grab{width:40px;height:5px;border-radius:3px;background:#D5D8E3;margin:0 auto 14px}
+.sheet h3{margin:0 0 4px;font-size:21px;font-weight:800;letter-spacing:-.015em}
+.sheet .sub{margin:0;color:var(--muted);font-size:14px;line-height:1.4}
+.sheet .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sheet .actions{display:grid;gap:10px;margin-top:20px}
+.cat{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cat button{padding:12px;border-radius:14px;border:1.5px solid var(--line);font-weight:700;font-size:13.5px;display:flex;gap:8px;align-items:center;min-height:52px}
+.cat button svg{width:19px;height:19px;color:var(--navy)}
+.cat button.on{border-color:var(--navy);background:#EEF1FB}
+@keyframes up{from{transform:translateY(100%)}to{transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.toast{position:absolute;left:50%;bottom:112px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;font-size:14px;font-weight:600;padding:12px 16px;border-radius:14px;box-shadow:0 10px 24px rgba(11,20,64,.3);opacity:0;transition:all .25s ease;z-index:30;pointer-events:none;display:flex;gap:8px;align-items:center;max-width:86%;width:max-content}
+.toast svg{width:18px;height:18px;stroke:#7EE2A8;stroke-width:2.6}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.fadein{animation:fade .22s ease}
+</style>
+</head>
+<body>
+<div class="stage">
+  <aside class="pitch" id="pitch"></aside>
+  <div class="device">
+    <div class="screen" id="screen">
+      <div class="statusbar">
+        <span id="clock">10:24</span>
+        <span class="island"></span>
+        <span class="sys">
+          <svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+          <svg viewBox="0 0 16 12"><path d="M8 2.2c2.4 0 4.6.9 6.2 2.5l1.3-1.3A10.6 10.6 0 0 0 8 .4 10.6 10.6 0 0 0 .5 3.4l1.3 1.3A8.8 8.8 0 0 1 8 2.2zm0 3.6c1.4 0 2.7.5 3.7 1.5l1.3-1.3A7 7 0 0 0 8 4a7 7 0 0 0-5 2l1.3 1.3c1-1 2.3-1.5 3.7-1.5zm0 3.6c.5 0 1 .2 1.3.5L8 11.2 6.7 9.9c.3-.3.8-.5 1.3-.5z"/></svg>
+          <svg viewBox="0 0 27 12"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="19" height="8" rx="2"/><rect x="24" y="4" width="2" height="4" rx="1" opacity=".4"/></svg>
+        </span>
+      </div>
+      <div id="app"></div>
+      <div class="homebar"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   GoBritanya Student App — prototype
+   ---------------------------------------------------------------------
+   1. APP_DATA    → all editable content (sourced from GoBritanya_Bilgi_Tabani.md
+                    and GoBritanya_Blog.md; items with sample:true are placeholders)
+   2. I18N        → EN / TR interface strings
+   3. Requests    → single data structure (state.requests) shaped for a future
+                    management portal ("Student requests") and HubSpot tickets
+   4. App logic   → router, rendering, events
+   ===================================================================== */
+
+/* ============================ 1. APP_DATA ============================ */
+const IMG = { room: "data:image/jpeg;base64,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", kirby: "data:image/jpeg;base64,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" };
+const SITE = "https://www.gobritanya.com";
+
+const APP_DATA = {
+  // Logged-in student — SAMPLE (no student data exists in the source files)
+  student: {
+    sample: true,
+    id: "STU-000123",
+    firstName: "Emma",
+    lastInitial: "W.",
+    email: "emma.w@example.com",
+    residenceId: "kirby-street-residence",
+    room: "Classic Studio · 304",
+    contractStart: "2026-11-28",   // check-in at 15:00 on this date (FAQ)
+    contractEnd: "2027-06-26"      // check-out at 10:00 on this date (FAQ)
+  },
+
+  // Contact details — Bilgi Tabanı › Contact us + FAQ
+  contacts: {
+    emergency: "+44 7503 378015",
+    office: "+44 20 7831 8247",
+    officeHours: { en: "Mon–Fri 9:00–17:30", tr: "Pzt–Cum 09:00–17:30" },
+    whatsapp: "+44 7799 315236",
+    finance: "+44 7464 888725",
+    emailBook: "book@gobritanya.com",
+    emailOps: "operations@gobritanya.com",
+    emailFinance: "creditcontrol@gobritanya.com",
+    address: "1st Floor Winchester House, 19 Bedford Row, London, WC1R 4EB"
+  },
+
+  // Teams named on "Information for Students and Parents"; city team routing for
+  // extensions is a SAMPLE rule (the source has no city-team structure).
+  teams: {
+    extension: city => ({ en: `${city} team`, tr: `${city} ekibi` }),
+    arrival:   () => ({ en: "Operations team", tr: "Operasyon ekibi" }),
+    enquiry:   () => ({ en: "Sales team", tr: "Satış ekibi" }),
+    support: {
+      maintenance: { en: "Residence management team", tr: "Konut yönetim ekibi" },
+      payments:    { en: "Finance team", tr: "Finans ekibi" },
+      checkin:     { en: "Operations team", tr: "Operasyon ekibi" },
+      wellbeing:   { en: "Student Wellness team", tr: "Öğrenci Sağlıklı Yaşam ekibi" },
+      other:       { en: "Your Accommodation Expert", tr: "Konaklama Uzmanın" }
+    }
+  },
+
+  checklist: [
+    { id: "arrival", icon: "clock",
+      title: { en: "Provide arrival time", tr: "Varış saatini bildir" },
+      hint:  { en: "Let the team know when you'll arrive", tr: "Ekibe ne zaman geleceğini bildir" } },
+    { id: "id", icon: "id",
+      title: { en: "Complete ID verification", tr: "Kimlik doğrulamasını tamamla" },
+      hint:  { en: "Bring your ID and confirmation letter to reception", tr: "Kimliğini ve onay mektubunu resepsiyona getir" } },
+    { id: "keys", icon: "key",
+      title: { en: "Collect your keys at reception", tr: "Anahtarını resepsiyondan al" },
+      hint:  { en: "After a short intro to fire safety and residence rules", tr: "Yangın güvenliği ve konut kuralları tanıtımından sonra" } }
+  ],
+
+  // "Included in your rent" — FAQ + standard residence Q&A
+  included: [
+    { en: "All utility bills", tr: "Tüm faturalar" },
+    { en: "Wi-Fi", tr: "Wi-Fi" },
+    { en: "24/7 reception & security", tr: "7/24 resepsiyon ve güvenlik" },
+    { en: "Social spaces", tr: "Sosyal alanlar" },
+    { en: "No security deposit", tr: "Depozito yok" },
+    { en: "Check-in & check-out cleaning", tr: "Giriş ve çıkış temizliği" }
+  ],
+
+  // Resident perks — Bilgi Tabanı › Special Benefits
+  perks: [
+    { id: "gocity", cls: "p1", tag: { en: "Go City London", tr: "Go City London" },
+      title: { en: "Extra 10% off London attraction passes", tr: "Londra müze/gezi kartlarında ekstra %10" },
+      text:  { en: "Tower of London, Westminster Abbey, The View from The Shard and more.", tr: "Tower of London, Westminster Abbey, The View from The Shard ve fazlası." },
+      code: "GOBRIT10", url: SITE + "/gocity-london-offer" },
+    { id: "refer", cls: "p2", tag: { en: "Refer a friend 26/27", tr: "Arkadaşını getir 26/27" },
+      title: { en: "£500 voucher for you and your friend", tr: "Sana ve arkadaşına £500'lık kupon" },
+      text:  { en: "For new residents booking 37+ weeks. Register within 48 hours at book@gobritanya.com.", tr: "37+ hafta rezervasyon yapan yeni öğrenciler için. 48 saat içinde book@gobritanya.com'a bildir." },
+      url: SITE + "/special-offers/refer-a-friend-earn-500-pound-voucher-each" },
+    { id: "ollie", cls: "p3", tag: { en: "Wellbeing", tr: "İyi oluş" },
+      title: { en: "Ollie AI — your 24/7 mental health coach", tr: "Ollie AI — 7/24 mental sağlık koçun" },
+      text:  { en: "Support with stress, anxiety and burnout, plus therapists in 21 languages.", tr: "Stres, kaygı ve tükenmişlik desteği; 21 dilde terapist erişimi." },
+      code: "70829408", url: SITE + "/your-ai-mental-health-coach" },
+    { id: "panda", cls: "p4", tag: { en: "HungryPanda", tr: "HungryPanda" },
+      title: { en: "Welcome pack for your new home", tr: "Yeni evin için hoş geldin paketi" },
+      text:  { en: "Cutlery, chopsticks, toiletries and a deck of cards to get you settled.", tr: "Çatal-bıçak, yemek çubukları, kişisel bakım ürünleri ve bir deste kart." },
+      url: SITE + "/hungry-panda-offer" }
+  ],
+
+  // The Common Room — Bilgi Tabanı › The Common Room
+  commonRoom: {
+    url: SITE + "/the-common-room",
+    groups: [
+      { name: "Student Collective", text: { en: "Share experiences and support", tr: "Deneyim paylaş, destek bul" } },
+      { name: "Student Bazaar",     text: { en: "Buy, sell or swap items",       tr: "Eşya al, sat, takas et" } },
+      { name: "Student Skill Swap", text: { en: "Teach something, learn something", tr: "Bir şey öğret, bir şey öğren" } },
+      { name: "Student Social",     text: { en: "Events and activities",          tr: "Etkinlikler ve aktiviteler" } }
+    ]
+  },
+
+  // Residence events — SAMPLE (site mentions themed socials, but no dates/venues)
+  events: [
+    { sample: true, date: "2027-02-06", title: { en: "Chinese New Year celebration", tr: "Çin Yeni Yılı kutlaması" }, place: { en: "Residence common area", tr: "Konut ortak alanı" } },
+    { sample: true, date: "2027-02-14", title: { en: "Valentine's Day social", tr: "Sevgililer Günü buluşması" }, place: { en: "Residence common area", tr: "Konut ortak alanı" } }
+  ],
+
+  // Blog — GoBritanya_Blog.md (summaries written for the app; full text on the site)
+  blog: [
+    { id: "kirby", img: "kirby", kicker: { en: "Your neighbourhood", tr: "Mahallen" },
+      title: "Kirby Street Residence: Student Living in the Heart of Central London",
+      summary: { en: "Farringdon Station is two minutes away, with Leather Lane Market and Exmouth Market on your doorstep.",
+                 tr: "Farringdon İstasyonu iki dakika uzakta; Leather Lane ve Exmouth Market hemen yanı başında." },
+      url: SITE + "/blog/kirby-street-residence-student-living-in-the-heart-of-central-london" },
+    { id: "movein", icon: "box", kicker: { en: "Moving in", tr: "Taşınma" },
+      title: "How to make moving-in day less stressful",
+      summary: { en: "Make a checklist, copy your documents and pack cleverly to keep moving-in day calm.",
+                 tr: "Liste yap, belgelerinin kopyasını al, akıllıca paketle: taşınma günü sakin geçsin." },
+      url: SITE + "/blog/how-to-make-moving-in-day-less-stressful" },
+    { id: "homesick", icon: "heart", kicker: { en: "Wellbeing", tr: "İyi oluş" },
+      title: "Struggling with homesickness?",
+      summary: { en: "Food from home, a room that feels like yours, a sports team — and asking for help when you need it.",
+                 tr: "Memleket yemekleri, sana ait hissettiren bir oda, bir spor takımı ve gerektiğinde yardım istemek." },
+      url: SITE + "/blog/struggling-with-homesickness" }
+  ],
+
+  // FAQ — Bilgi Tabanı › 3. Frequently asked questions (condensed)
+  faq: [
+    { cat: "checkin", id: "checkin-time",
+      q: { en: "When is my check-in?", tr: "Check-in ne zaman?" },
+      a: { en: "Check-in is at 3:00 pm on your contract start date. If you arrive before 3 pm your room may not be ready yet.",
+           tr: "Check-in, sözleşme başlangıç gününde saat 15:00'te. 15:00'ten önce gelirsen odan henüz hazır olmayabilir." } },
+    { cat: "checkin", id: "late-arrival",
+      q: { en: "What if I arrive after 18:00?", tr: "18:00'den sonra varırsam ne olur?" },
+      a: { en: "Let us know at least 48 hours in advance (operations@gobritanya.com) — late at night only night security may be on site.",
+           tr: "En az 48 saat önceden haber ver (operations@gobritanya.com). Gece geç saatte sadece gece güvenliği bulunabilir." } },
+    { cat: "checkin", id: "checkin-what",
+      q: { en: "What happens at check-in?", tr: "Check-in'de ne oluyor?" },
+      a: { en: "Show your ID and confirmation letter at reception. You'll get a short intro to fire safety and residence rules, then your keys.",
+           tr: "Resepsiyonda kimliğini ve onay mektubunu göster. Yangın güvenliği ve konut kuralları hakkında kısa bir bilgilendirmeden sonra anahtarını alırsın." } },
+    { cat: "checkin", id: "bedding",
+      q: { en: "Does my room come with bedding and towels?", tr: "Odamda nevresim ve havlu var mı?" },
+      a: { en: "Bedding and kitchen items are only included if you bought a Bedding or Kitchen Pack. Bring your own towels and toiletries.",
+           tr: "Nevresim ve mutfak eşyaları yalnızca Bedding veya Kitchen Pack aldıysan dahil. Havlu ve kişisel bakım ürünlerini kendin getir." } },
+    { cat: "checkin", id: "airport",
+      q: { en: "Can you pick me up from the airport?", tr: "Beni havalimanından alabilir misiniz?" },
+      a: { en: "Yes — airport pickups can be arranged. Email book@gobritanya.com.",
+           tr: "Evet, havalimanı transferi ayarlanabilir. book@gobritanya.com'a yaz." } },
+    { cat: "stay", id: "rent-includes",
+      q: { en: "What is included in my rent?", tr: "Kiraya neler dahil?" },
+      a: { en: "Your room, residence facilities and all utility bills — water, electricity, gas and Wi-Fi. Full-time students are exempt from Council Tax.",
+           tr: "Odan, konut olanakları ve tüm faturalar (su, elektrik, gaz, Wi-Fi). Tam zamanlı öğrenciler Council Tax'ten muaf." } },
+    { cat: "stay", id: "broken",
+      q: { en: "Something in my room isn't working", tr: "Odamda bir şey çalışmıyor" },
+      a: { en: "Tell reception and they'll log a maintenance request — or create a support request in this app. For urgent issues call +44 7503 378015.",
+           tr: "Resepsiyona bildir, bakım talebi açsınlar ya da bu uygulamadan destek talebi oluştur. Acil durumlarda +44 7503 378015'i ara." } },
+    { cat: "stay", id: "lost-key",
+      q: { en: "What happens if I lose my key?", tr: "Anahtarımı kaybedersem ne olur?" },
+      a: { en: "Tell reception as soon as possible. They'll issue a replacement; a key replacement fee may apply.",
+           tr: "En kısa sürede resepsiyona haber ver. Yeni anahtar verilir; ücret uygulanabilir." } },
+    { cat: "stay", id: "parcels",
+      q: { en: "How do I receive parcels?", tr: "Kargolarımı nasıl teslim alırım?" },
+      a: { en: "Reception accepts parcels and lets you know when they arrive. Letters go to your personal mailbox.",
+           tr: "Kargoları resepsiyon teslim alır ve sana haber verir. Mektuplar kişisel posta kutuna gelir." } },
+    { cat: "stay", id: "visitors",
+      q: { en: "Can friends or family visit me?", tr: "Arkadaşlarım veya ailem ziyarete gelebilir mi?" },
+      a: { en: "Yes. Guest policies vary by residence and guests may need to be signed in — check with reception.",
+           tr: "Evet. Misafir kuralları konuta göre değişir, misafirlerin kayıt olması gerekebilir. Resepsiyona danış." } },
+    { cat: "stay", id: "laundry",
+      q: { en: "How do I use the laundry?", tr: "Çamaşırhaneyi nasıl kullanırım?" },
+      a: { en: "Laundry usually runs on a paid app: download it, add credit and start the machines from your phone. Reception can confirm the details.",
+           tr: "Çamaşırhane genelde ücretli bir uygulamayla çalışır: uygulamayı indir, bakiye yükle, makineleri telefondan başlat. Ayrıntılar için resepsiyona sor." } },
+    { cat: "checkout", id: "checkout-time",
+      q: { en: "When is check-out?", tr: "Check-out ne zaman?" },
+      a: { en: "10:00 am on your contract end date. Late check-outs aren't offered — extend your booking if you'd like to stay longer.",
+           tr: "Sözleşme bitiş gününde saat 10:00. Geç çıkış yapılmıyor; daha uzun kalmak istersen rezervasyonunu uzat." } },
+    { cat: "checkout", id: "extend",
+      q: { en: "Can I extend my stay?", tr: "Kalışımı uzatabilir miyim?" },
+      a: { en: "Yes, depending on availability. Use “Request an extension” on My stay, or contact your Accommodation Expert.",
+           tr: "Evet, müsaitliğe bağlı olarak. My stay ekranındaki “Uzatma talep et” butonunu kullan ya da Konaklama Uzmanınla iletişime geç." } },
+    { cat: "checkout", id: "early",
+      q: { en: "Do I get a refund if I check out early?", tr: "Erken çıkarsam iade alır mıyım?" },
+      a: { en: "No — your room stays reserved until your contract ends. Ask about the replacement policy if another student could take over.",
+           tr: "Hayır, odan sözleşme bitimine kadar senin adına ayrılı kalır. Başka bir öğrenci devralabilecekse devir (replacement) politikasını sor." } },
+    { cat: "payments", id: "deposit",
+      q: { en: "Do I need to pay a security deposit?", tr: "Depozito ödemem gerekiyor mu?" },
+      a: { en: "No. GoBritanya doesn't require a security deposit for any booking.",
+           tr: "Hayır. GoBritanya hiçbir rezervasyon için depozito istemiyor." } },
+    { cat: "payments", id: "how-pay",
+      q: { en: "How can I make a payment?", tr: "Nasıl ödeme yapabilirim?" },
+      a: { en: "By bank transfer or online with a debit/credit card. Need help? Finance: +44 7464 888725 (call or WhatsApp).",
+           tr: "Banka havalesi ya da banka/kredi kartıyla online. Yardım için Finans: +44 7464 888725 (arama veya WhatsApp)." } },
+    { cat: "payments", id: "loan",
+      q: { en: "I'm on a student loan — can I get a tailored plan?", tr: "Öğrenci kredisi alıyorum, bana özel ödeme planı olur mu?" },
+      a: { en: "Yes: up to 6 interest-free instalments, with due dates matched to your loan schedule.",
+           tr: "Evet: kredi takvimine göre ayarlanmış, en fazla 6 faizsiz taksit." } }
+  ],
+
+  // Residences — Bilgi Tabanı › 6. Residence summary table + 7. Residences in detail
+  // price: weekly £ "from" (17 Nov 2026) | "sold" = Sold out | null = not listed
+  residences: [
+    R("abacus-residence","Abacus Residence","Brighton","Baker St","6-11 Baker St, Brighton BN1 4JN","sold","Modern rooms and studios close to the University of Brighton and the University of Sussex, with a lounge, roof terrace and study areas.",["Lounge","Roof terrace","Study areas"]),
+    R("brighton-residence","Brighton Residence","Brighton","Moulsecoomb","7 The Furlong, Lewes Road, Brighton, BN2 4FR",null,"One of GoBritanya's newest residences, in Moulsecoomb — the heart of Brighton's student community, with the University of Brighton campus on the doorstep.",["All bills included","On-site gym","Cinema","On-site laundry"]),
+    R("dublin-residence","Dublin Residence","Dublin","Stephens Street Upper","6-14 Stephens Street Upper, Dublin D08 CH2H","sold","A brand-new residence in the heart of Dublin, within walking distance of RCSI, Trinity College and UCD.",["Private bathroom","Shared kitchen","Fully furnished"]),
+    R("point-campus-dublin","Point Campus Dublin","Dublin","Point Village","Mayor Street Upper, Point Village, Dublin D01 W2R1",null,"",["Private bathroom","Shared kitchen","Fully furnished"]),
+    R("briggate-studios","Briggate Studios - City Centre","Leeds","City Centre","12 Briggate, Leeds LS1 6AA",179,"Opened in October 2023 on Leeds' iconic Briggate shopping street, minutes from Leeds station and a short walk from the University of Leeds and Leeds Beckett.",["Free breakfast","Cinema","Games area","Wellness & yoga studio","Bike storage"],"Briggate Studios"),
+    R("aldgate-residence","Aldgate Residence","London","Aldgate · Zone 1","1-2 Education Square, London, E1 1FA",531,"High-end living in East London with an on-site gym, cinema, lounges and study areas — Brick Lane, Spitalfields Market and Shoreditch are close by.",["On-site gym","Cinema","Courtyard","Dual-band Wi-Fi"]),
+    R("axo-camden","AXO Camden","London","Camden","111-113 Bartholomew Road, Camden, London, NW5 2BJ","sold","Spacious studios and one-bedroom apartments about 15 minutes from UCL, SOAS and University of the Arts, 6 minutes from Kentish Town.",["Private studios","Bike storage","Courtyard","Laundry"]),
+    R("axo-oxford-circus","AXO Oxford Circus","London","Marylebone","2 Devonshire Street, Marylebone, London, W1W 5DB","sold","Spacious studios in a Grade II listed building, under 10 minutes' walk from the University of Westminster and 5 minutes from Oxford Street.",["Private studios","Zone 1","Laundry"]),
+    R("ealing-residence","Ealing Residence","London","North Acton · Zone 2","3 Victoria Rd, North Acton, London, W3 6UN",352,"A calm, green setting that stays well connected to central London, with en-suite rooms, private studios, a gym and study spaces.",["On-site gym","Study spaces","Communal lounges","Dual-band Wi-Fi"]),
+    R("east-central-house","East Central House","London","Old Street","115 Lever Street, London","sold","245 bedrooms with private bathrooms, 10 minutes' walk from Old Street station — ideal for City University, London College of Fashion and UCL.",["Common room","Pool table","Courtyard","Study room"]),
+    R("hammersmith-residence","Hammersmith Residence","London","Hammersmith · Zone 2","230 Shepherds Bush Road, London W6 7NL",null,"Premium en-suite rooms and studios with a private gym, cinema room, study spaces and social areas.",["On-site gym","Cinema","Dual-band Wi-Fi","On-site laundry"]),
+    R("highbury-residence","Highbury Residence","London","Holloway Road · Zone 2","309 Holloway Road, London N7 9DS",393,"Three minutes' walk from Holloway Road station, near City University, UCL and London Metropolitan University.",["On-site gym","Cinema","Communal lounges","Study spaces"]),
+    R("highbury-residence-ii","Highbury Residence II","London","Holloway Road · Zone 2","295 Holloway Road, London N7 8HS",518,"",["On-site gym","Cinema","Private kitchen","Communal lounges"]),
+    R("iq-aldgate-residence","IQ Aldgate Residence","London","Commercial Road","66 Commercial Road, London E1 1LP",null,"",["On-site gym","Cinema","Bike storage","Private kitchen"]),
+    R("islington-residence","Islington Residence","London","Caledonian Road · Zone 2","32-34 Market Rd, London N7 9AW",407,"Recently refurbished en-suite rooms and premium studios, a 5-minute walk from Caledonian Road station.",["On-site gym","Cinema","Study spaces","Communal lounges"]),
+    R("kings-cross-residence","King's Cross Residence","London","King's Cross · Zone 1","200 Pentonville Rd, London N1 9JP",595,"5 minutes' walk from King's Cross St Pancras, near UCL, SOAS, King's College London and City University.",["On-site gym","Cinema","Study spaces","Private kitchen"]),
+    R("kirby-street-residence","Kirby Street Residence","London","Holborn","36-43 Kirby St, Holborn, EC1N 8TE",575,"Fully furnished premium studios beside Hatton Garden, a two-minute walk from Farringdon Station (Elizabeth line, Thameslink and Underground).",["Private studios","Courtyard","Bike storage","Dual-band Wi-Fi","On-site laundry"],"Kirby Street"),
+    R("lewisham-residence","Lewisham Residence","London","Lewisham · Zone 2/3","46 Thurston Rd, London SE13 7SD",382,"Affordable modern living in Southeast London with breakfast included, 5 minutes from Lewisham DLR — easy access to Goldsmiths and Greenwich.",["Breakfast included","On-site gym","Terrace","TV snug"]),
+    R("london-bridge","London Bridge","London","London Bridge","42-46 Weston St, London SE1 3QD",530,"",["On-site gym","Cinema","Bike storage","Social space"]),
+    R("mcmillan-residence","McMillan Residence","London","Greenwich · Zone 2/3","Creek Rd, London SE8 3BU",280,"En-suite rooms, twin studios and private studios a 10-minute walk from Greenwich Station and Cutty Sark DLR, close to the University of Greenwich.",["Study spaces","Social lounges","Dual-band Wi-Fi"]),
+    R("old-street-residence","Old Street Residence","London","Old Street · Zone 1","18 Paul St, London EC2A 4JH",551,"5 minutes from Old Street station, near City University, UCL and LSE, with a gym, cinema room and social lounges.",["On-site gym","Cinema","Social space","Private kitchen"]),
+    R("paris-gardens","Paris Gardens","London","Paris Garden · SE1","6 Paris Garden, London SE1 8ND",null,"",[]),
+    R("piccadilly-court","Piccadilly Court","London","Caledonian Road","457-463 Caledonian Rd, London N7 9BJ",383,"",["Shared kitchen","Bike storage","Dual-band Wi-Fi"]),
+    R("shoreditch-residence","Shoreditch Residence","London","Shoreditch · Zone 1","2 Silicon Way, London N1 6AT",515,"Private studios in one of London's most exciting neighbourhoods, 5 minutes from Old Street station.",["On-site gym","Cinema","Study areas","Private kitchen"]),
+    R("south-bank-residence","South Bank Residence","London","South Bank","17 Great Suffolk Street, London SE1 0NS",null,"",["On-site gym","Cinema","Social space"]),
+    R("spitalfields-residence","Spitalfields Residence","London","Spitalfields","9 Frying Pan Alley, Spitalfields, E1 7HS",575,"",["On-site gym","Cinema","Private kitchen","Study space"]),
+    R("station-court","Station Court","London","Tottenham","158 High Road, Page Green Terrace, London N15 4NU",null,"225 rooms with private bathrooms, 5 minutes from Seven Sisters — the Victoria line reaches central London in 15 minutes.",["Common room","Study room","Table football"]),
+    R("sterling-court-wembley","Sterling Court (Wembley)","London","Wembley","6 Lakeside Way, London HA9 0BU",253,"",["Social space","Study space","Dual-band Wi-Fi"]),
+    R("student-living-heights","Student Living Heights","London","Angel","312 Goswell Road, London EC1V 7AF","sold","In Angel, a 5-minute walk from City, University of London, surrounded by restaurants, pubs and parks.",[]),
+    R("vega-residence","Vega Residence","London","Miles Street · SW8","iQ Vega, 6 Miles St, London SW8 1RZ",null,"",[]),
+    R("wembley-arthur-house","Wembley Arthur House","London","Wembley Park","Arthur House, 1 Rutherford Way, Wembley Park, London HA9 0BP",403,"770 private studios with lounges, a café, study spaces and a library.",["On-site gym","Café","Library","Study spaces"]),
+    R("westminster-residence","Westminster Residence","London","Lambeth","200A Lambeth Road, Lambeth, London SE1 7LR",598,"",["Private kitchen","Private bathroom","Fully furnished"]),
+    R("white-city-residence","White City Residence","London","East Acton","10 Westway, East Acton, London W12 0DD",445,"",["On-site gym","Cinema","Social space","Study space"]),
+    R("your-tribe-southwark","Your TRIBE Southwark","London","Southwark","28 Ruby Street, London SE15 1LL",238,"",["On-site gym","Rooftop terrace","Shared kitchen"])
+  ],
+
+  // Seed request so "My requests" isn't empty — SAMPLE
+  seedRequests: [
+    { id: "REQ-2026-0007", type: "support", status: "resolved", createdAt: "2026-11-10T10:12:00.000Z", source: "student_app", sample: true,
+      student: { id: "STU-000123", name: "Emma W.", email: "emma.w@example.com" },
+      residence: { id: "kirby-street-residence", name: "Kirby Street Residence", city: "London" },
+      assignedTo: { team: "Your Accommodation Expert" },
+      details: { category: "other", message: "Question about adding a Bedding Pack before arrival." },
+      integration: { hubspot: { objectType: "ticket", pipeline: "student_requests", synced: false, externalId: null } } }
+  ]
+};
+// Photos — downloaded from each residence page on gobritanya.com (17 Nov 2026), stored in images/residences/
+const PHOTOS = {"abacus-residence":["images/residences/abacus-residence.jpg",""],"dublin-residence":["images/residences/dublin-residence.jpg","images/residences/dublin-residence-room.jpg"],"point-campus-dublin":["images/residences/point-campus-dublin.jpg","images/residences/point-campus-dublin-room.jpg"],"brighton-residence":["images/residences/brighton-residence.jpg","images/residences/brighton-residence-room.jpg"],"kirby-street-residence":["images/residences/kirby-street-residence.jpg","images/residences/kirby-street-residence-room.jpg"],"briggate-studios":["images/residences/briggate-studios.jpg","images/residences/briggate-studios-room.jpg"],"axo-camden":["images/residences/axo-camden.jpg",""],"lewisham-residence":["images/residences/lewisham-residence.jpg","images/residences/lewisham-residence-room.jpg"],"highbury-residence":["images/residences/highbury-residence.jpg","images/residences/highbury-residence-room.jpg"],"iq-aldgate-residence":["images/residences/iq-aldgate-residence.jpg","images/residences/iq-aldgate-residence-room.jpg"],"highbury-residence-ii":["images/residences/highbury-residence-ii.jpg","images/residences/highbury-residence-ii-room.jpg"],"axo-oxford-circus":["images/residences/axo-oxford-circus.jpg",""],"mcmillan-residence":["images/residences/mcmillan-residence.jpg","images/residences/mcmillan-residence-room.jpg"],"islington-residence":["images/residences/islington-residence.jpg","images/residences/islington-residence-room.jpg"],"east-central-house":["images/residences/east-central-house.jpg",""],"ealing-residence":["images/residences/ealing-residence.jpg","images/residences/ealing-residence-room.jpg"],"aldgate-residence":["images/residences/aldgate-residence.jpg","images/residences/aldgate-residence-room.jpg"],"hammersmith-residence":["images/residences/hammersmith-residence.jpg","images/residences/hammersmith-residence-room.jpg"],"kings-cross-residence":["images/residences/kings-cross-residence.jpg","images/residences/kings-cross-residence-room.jpg"],"old-street-residence":["images/residences/old-street-residence.jpg","images/residences/old-street-residence-room.jpg"],"shoreditch-residence":["images/residences/shoreditch-residence.jpg","images/residences/shoreditch-residence-room.jpg"],"student-living-heights":["images/residences/student-living-heights.jpg",""],"paris-gardens":["images/residences/paris-gardens.jpg",""],"london-bridge":["images/residences/london-bridge.jpg","images/residences/london-bridge-room.jpg"],"vega-residence":["images/residences/vega-residence.jpg",""],"spitalfields-residence":["images/residences/spitalfields-residence.jpg","images/residences/spitalfields-residence-room.jpg"],"piccadilly-court":["images/residences/piccadilly-court.jpg","images/residences/piccadilly-court-room.jpg"],"wembley-arthur-house":["images/residences/wembley-arthur-house.jpg","images/residences/wembley-arthur-house-room.jpg"],"south-bank-residence":["images/residences/south-bank-residence.jpg","images/residences/south-bank-residence-room.jpg"],"sterling-court-wembley":["images/residences/sterling-court-wembley.jpg","images/residences/sterling-court-wembley-room.jpg"],"station-court":["images/residences/station-court.jpg",""],"white-city-residence":["images/residences/white-city-residence.jpg","images/residences/white-city-residence-room.jpg"],"westminster-residence":["images/residences/westminster-residence.jpg","images/residences/westminster-residence-room.jpg"],"your-tribe-southwark":["images/residences/your-tribe-southwark.jpg","images/residences/your-tribe-southwark-room.jpg"]};
+APP_DATA.residences.forEach(r => { const p = PHOTOS[r.id] || []; r.photo = p[0] || ""; r.roomPhoto = p[1] || ""; });
+function R(id, name, city, area, address, price, desc, features, short) {
+  const citySlug = city.toLowerCase();
+  return { id, name, short: short || name, city, area, address,
+           price: typeof price === "number" ? price : null, soldOut: price === "sold",
+           desc, features, url: `${SITE}/student-residences/${citySlug}/${id}` };
+}
+
+/* ============================== 2. I18N ============================== */
+const I18N = {
+  en: {
+    tabHome: "Home", tabStay: "My stay", tabSupport: "Support",
+    morning: "Good morning", afternoon: "Good afternoon", evening: "Good evening",
+    hi: "Hi", sample: "Sample", samplePhoto: "Sample photo",
+    checkinIn: d => `Check-in in ${d} day${d === 1 ? "" : "s"}`, checkinToday: "Check-in today", atHome: "You're home",
+    checklistProgress: (a, b) => `Arrival checklist · ${a}/${b} done`,
+    quick: "Quick actions", qaExtend: "Extend stay", qaIssue: "Report issue", qaExplore: "Residences", qaSos: "24h help",
+    perks: "Resident perks", perksSub: "For GoBritanya students", copy: "Tap to copy", copied: c => `Code ${c} copied`, more: "Details",
+    community: "Community", crTitle: "The Common Room", crDesc: "GoBritanya's digital community — meet students across all residences.",
+    crJoin: "Join The Common Room", events: "At your residence",
+    blog: "From the GoBritanya blog", readOn: "Read on gobritanya.com", seeAll: "See all",
+    checkIn: "Check-in", checkOut: "Check-out", room: "Room",
+    checklist: "Arrival checklist", requestExt: "Request an extension", included: "Included in your rent",
+    goodToKnow: "Good to know", residenceDetails: "Residence details",
+    arrivingOn: (d, t) => `Arriving ${d} · ${t}`, done: "Done",
+    arrTitle: "When will you arrive?", arrSub: "Check-in starts at 3:00 pm on your contract start date.",
+    date: "Date", time: "Time", lateNote: "Arriving after 18:00? Share your time at least 48 hours in advance — late at night only night security may be on site.",
+    saveArrival: "Save arrival time", cancel: "Cancel", clear: "Clear arrival time", arrivalSaved: "Arrival time sent to the Operations team",
+    extTitle: "Request an extension", howMany: "How many extra weeks?", weeksWord: w => (w === 1 ? "week" : "weeks"),
+    currentEnd: "Current end", newEnd: "New end", note: "Note (optional)", notePh: "e.g. My course finishes in mid-July",
+    extInfo: "Extensions depend on availability. Your Accommodation Expert will confirm dates and price with you.",
+    sendReq: "Send request",
+    received: "Request received", assignedMsg: team => `Your request has been assigned to the ${team}.`,
+    reqTitle: { extension: "Extension request", support: "Support request", arrival: "Arrival time", enquiry: "Residence enquiry" },
+    addWeeks: w => `${w} additional week${w === 1 ? "" : "s"}`, assignedTo: team => `Assigned to ${team}`,
+    reqId: "Request ID", submitted: "Submitted",
+    stepReceived: "Received", stepReceivedHint: "We've got your request",
+    stepReview: "In review", stepReviewHint: "The team is checking availability",
+    stepDone: "Resolved", stepDoneHint: "Your Accommodation Expert confirms by email",
+    payload: "Data for the management portal (JSON)", backStay: "Back to My stay", viewReqs: "View my requests",
+    demoAdvance: "Demo: move to next status",
+    support: "Support", sosTitle: "24-hour emergency line", sosSub: "For urgent issues during your stay", call: "Call",
+    newReq: "Create a support request", contact: "Contact us",
+    cOffice: "Call the office", cWa: "WhatsApp", cWaSub: "Bookings & questions",
+    cBook: "Email bookings", cBookSub: "Extensions, rebooking, viewings",
+    cOps: "Operations team", cOpsSub: "Check-in, arrival times, room issues",
+    cFin: "Finance team", cFinSub: "Payments & refunds",
+    myReqs: "My requests", noReqs: "No requests yet",
+    wellbeing: "Wellbeing", wellDesc: "Our team is trained in Mental Health First Aid, and we work with Student Minds, the UK's student mental health charity.",
+    wellOllie: "Ollie AI · 24/7 coach", wellMinds: "Student Minds",
+    faq: "Frequently asked questions", faqSearch: "Search questions", all: "All",
+    cat: { checkin: "Check-in", stay: "Staying with us", checkout: "Check-out", payments: "Payments" },
+    noResults: "No matching questions", reset: "Reset demo data", resetDone: "Demo data reset",
+    supTitle: "New support request", supSub: "We'll route it to the right team.",
+    category: "Category", message: "Describe the issue", messagePh: "e.g. The hot water in my room isn't working",
+    supCat: { maintenance: "Room maintenance", payments: "Payments", checkin: "Check-in / out", wellbeing: "Wellbeing", other: "Something else" },
+    submit: "Submit request", supSent: team => `Sent to the ${team}`, needText: "Please add a short description",
+    explore: "Residences", searchRes: "Search by name or area", count: n => `${n} residence${n === 1 ? "" : "s"}`,
+    from: "from", wk: "/week", soldOut: "Sold out", priceAsk: "Price on request",
+    highlights: "Highlights", roomPhoto: "Rooms", everyRes: "In every residence", askAbout: "Ask about this residence",
+    askSent: "Enquiry sent to the Sales team", viewWeb: "View on gobritanya.com",
+    descFallback: "Photos, room types and current prices are on gobritanya.com.",
+    everyList: ["24/7 reception & security", "CCTV & secure entry", "Superfast Wi-Fi", "Social spaces", "Regular social events"],
+    yourHome: "Your residence",
+    pitchTitle: "Student App", pitchVer: "Clickable prototype · v0.1",
+    pitch: [
+      ["Arrival made easy", "Countdown, arrival checklist and arrival time — no emails needed."],
+      ["Requests in two taps", "Extensions and support requests, tracked from New to Resolved."],
+      ["Perks only residents get", "Go City 10%, £500 referral vouchers, Ollie AI, welcome packs."],
+      ["A community, not just a room", "The Common Room, residence socials and blog guides."]
+    ],
+    pitchSrc: "Content: gobritanya.com (captured 17 Nov 2026)."
+  },
+  tr: {
+    tabHome: "Ana sayfa", tabStay: "Konaklamam", tabSupport: "Destek",
+    morning: "Günaydın", afternoon: "İyi günler", evening: "İyi akşamlar",
+    hi: "Merhaba", sample: "Örnek içerik", samplePhoto: "Örnek görsel",
+    checkinIn: d => `Check-in'e ${d} gün`, checkinToday: "Check-in bugün", atHome: "Evindesin",
+    checklistProgress: (a, b) => `Varış listesi · ${a}/${b} tamamlandı`,
+    quick: "Hızlı işlemler", qaExtend: "Uzatma", qaIssue: "Sorun bildir", qaExplore: "Konutlar", qaSos: "7/24 yardım",
+    perks: "Öğrenci avantajları", perksSub: "GoBritanya öğrencilerine özel", copy: "Kopyalamak için dokun", copied: c => `${c} kodu kopyalandı`, more: "Detay",
+    community: "Topluluk", crTitle: "The Common Room", crDesc: "GoBritanya'nın dijital topluluğu: tüm konutlardaki öğrencilerle tanış.",
+    crJoin: "The Common Room'a katıl", events: "Konutunda",
+    blog: "GoBritanya blogundan", readOn: "gobritanya.com'da oku", seeAll: "Tümü",
+    checkIn: "Giriş", checkOut: "Çıkış", room: "Oda",
+    checklist: "Varış listesi", requestExt: "Uzatma talep et", included: "Kiraya dahil olanlar",
+    goodToKnow: "Bilmekte fayda var", residenceDetails: "Konut detayları",
+    arrivingOn: (d, t) => `Varış: ${d} · ${t}`, done: "Tamam",
+    arrTitle: "Ne zaman varacaksın?", arrSub: "Check-in, sözleşme başlangıç gününde 15:00'te başlar.",
+    date: "Tarih", time: "Saat", lateNote: "18:00'den sonra mı geliyorsun? Saatini en az 48 saat önceden paylaş. Gece geç saatte sadece gece güvenliği bulunabilir.",
+    saveArrival: "Varış saatini kaydet", cancel: "Vazgeç", clear: "Varış saatini sil", arrivalSaved: "Varış saatin Operasyon ekibine iletildi",
+    extTitle: "Uzatma talebi", howMany: "Kaç hafta daha kalmak istiyorsun?", weeksWord: () => "hafta",
+    currentEnd: "Mevcut bitiş", newEnd: "Yeni bitiş", note: "Not (isteğe bağlı)", notePh: "örn. Kursum Temmuz ortasında bitiyor",
+    extInfo: "Uzatmalar müsaitliğe bağlıdır. Konaklama Uzmanın tarihleri ve fiyatı seninle teyit edecek.",
+    sendReq: "Talebi gönder",
+    received: "Talebin alındı", assignedMsg: team => `Talebin ${team}ne atandı.`,
+    reqTitle: { extension: "Uzatma talebi", support: "Destek talebi", arrival: "Varış saati", enquiry: "Konut bilgi talebi" },
+    addWeeks: w => `${w} hafta ek kalış`, assignedTo: team => `Atanan: ${team}`,
+    reqId: "Talep no", submitted: "Gönderildi",
+    stepReceived: "Alındı", stepReceivedHint: "Talebin bize ulaştı",
+    stepReview: "İnceleniyor", stepReviewHint: "Ekip müsaitliği kontrol ediyor",
+    stepDone: "Sonuçlandı", stepDoneHint: "Konaklama Uzmanın e-postayla teyit eder",
+    payload: "Yönetim portalına gidecek veri (JSON)", backStay: "Konaklamam'a dön", viewReqs: "Taleplerimi gör",
+    demoAdvance: "Demo: sonraki duruma geçir",
+    support: "Destek", sosTitle: "7/24 acil hat", sosSub: "Konaklama sırasında acil durumlar için", call: "Ara",
+    newReq: "Destek talebi oluştur", contact: "İletişim",
+    cOffice: "Ofisi ara", cWa: "WhatsApp", cWaSub: "Rezervasyon ve sorular",
+    cBook: "Rezervasyon e-postası", cBookSub: "Uzatma, yeniden rezervasyon, oda gezisi",
+    cOps: "Operasyon ekibi", cOpsSub: "Check-in, varış saati, oda sorunları",
+    cFin: "Finans ekibi", cFinSub: "Ödemeler ve iadeler",
+    myReqs: "Taleplerim", noReqs: "Henüz talep yok",
+    wellbeing: "İyi oluş", wellDesc: "Ekibimiz Ruh Sağlığı İlk Yardım eğitimli. İngiltere'nin öğrenci ruh sağlığı vakfı Student Minds ile birlikte çalışıyoruz.",
+    wellOllie: "Ollie AI · 7/24 koç", wellMinds: "Student Minds",
+    faq: "Sık sorulan sorular", faqSearch: "Soru ara", all: "Tümü",
+    cat: { checkin: "Check-in", stay: "Konaklama", checkout: "Check-out", payments: "Ödemeler" },
+    noResults: "Eşleşen soru yok", reset: "Demo verisini sıfırla", resetDone: "Demo verisi sıfırlandı",
+    supTitle: "Yeni destek talebi", supSub: "Doğru ekibe yönlendireceğiz.",
+    category: "Kategori", message: "Sorunu anlat", messagePh: "örn. Odamda sıcak su gelmiyor",
+    supCat: { maintenance: "Oda bakımı", payments: "Ödemeler", checkin: "Giriş / çıkış", wellbeing: "İyi oluş", other: "Diğer" },
+    submit: "Talebi gönder", supSent: team => `${team} talebini aldı`, needText: "Lütfen kısa bir açıklama ekle",
+    explore: "Konutlar", searchRes: "İsim veya semt ara", count: n => `${n} konut`,
+    from: "başlangıç", wk: "/hafta", soldOut: "Tükendi", priceAsk: "Fiyat için sor",
+    highlights: "Öne çıkanlar", roomPhoto: "Odalar", everyRes: "Her konutta", askAbout: "Bu konut hakkında bilgi al",
+    askSent: "Talebin Satış ekibine iletildi", viewWeb: "gobritanya.com'da gör",
+    descFallback: "Fotoğraflar, oda tipleri ve güncel fiyatlar gobritanya.com'da.",
+    everyList: ["7/24 resepsiyon ve güvenlik", "CCTV ve güvenli giriş", "Hızlı Wi-Fi", "Sosyal alanlar", "Düzenli sosyal etkinlikler"],
+    yourHome: "Konutun",
+    pitchTitle: "Öğrenci Uygulaması", pitchVer: "Tıklanabilir prototip · v0.1",
+    pitch: [
+      ["Kolay varış", "Geri sayım, varış listesi ve varış saati. E-posta trafiği yok."],
+      ["İki dokunuşla talep", "Uzatma ve destek talepleri, Yeni'den Sonuçlandı'ya kadar takip edilir."],
+      ["Sadece öğrencilere avantajlar", "Go City %10, £500 referans kuponu, Ollie AI, hoş geldin paketleri."],
+      ["Oda değil, topluluk", "The Common Room, konut etkinlikleri ve blog rehberleri."]
+    ],
+    pitchSrc: "İçerik: gobritanya.com (17 Kasım 2026)."
+  }
+};
+
+/* ============================ 3. STATE ============================== */
+const STORE_KEY = "gobritanya_student_proto_v1";
+function defaultState() {
+  return {
+    lang: "en",
+    checklist: { arrival: false, id: false, keys: false },
+    arrival: null,                      // { date, time }
+    requests: JSON.parse(JSON.stringify(APP_DATA.seedRequests)),
+    seq: 8
+  };
+}
+function loadState() {
+  try { const s = JSON.parse(localStorage.getItem(STORE_KEY)); if (s && s.requests) return Object.assign(defaultState(), s); } catch (e) {}
+  return defaultState();
+}
+let state = loadState();
+function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} }
+
+// Single place where requests are created → later: POST to portal API / HubSpot
+function createRequest(type, details, team) {
+  const s = APP_DATA.student, r = resById(s.residenceId);
+  const req = {
+    id: `REQ-${new Date().getFullYear()}-${String(state.seq++).padStart(4, "0")}`,
+    type,                                   // extension | support | arrival | enquiry
+    status: "new",                          // new | in_review | resolved
+    createdAt: new Date().toISOString(),
+    source: "student_app",
+    student: { id: s.id, name: `${s.firstName} ${s.lastInitial}`, email: s.email },
+    residence: { id: r.id, name: r.name, city: r.city },
+    assignedTo: { team: team.en },          // stored in English for the portal
+    details,
+    integration: { hubspot: { objectType: "ticket", pipeline: "student_requests", synced: false, externalId: null } }
+  };
+  state.requests.unshift(req);
+  save();
+  return req;
+}
+
+/* ============================ 4. APP ================================ */
+const $app = document.getElementById("app");
+const nav = { tab: "home", stack: [] };
+let ui = { sheet: null, faqCat: "all", faqQ: "", resCity: "all", resQ: "", ext: { weeks: 4, note: "" }, sup: { cat: "maintenance", msg: "" } };
+
+const t = (k, ...a) => { const v = I18N[state.lang][k]; return typeof v === "function" ? v(...a) : v; };
+const L = o => (o == null ? "" : typeof o === "string" ? o : (o[state.lang] || o.en));
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const resById = id => APP_DATA.residences.find(r => r.id === id);
+const sampleTag = (txt) => `<span class="sample">${txt || t("sample")}</span>`;
+const locale = () => (state.lang === "tr" ? "tr-TR" : "en-GB");
+const fmtDate = (iso, opts) => new Date(iso + (iso.length === 10 ? "T12:00:00" : "")).toLocaleDateString(locale(), opts || { day: "numeric", month: "short", year: "numeric" });
+const fmtDT = iso => new Date(iso).toLocaleString(locale(), { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+const addDays = (iso, d) => { const x = new Date(iso + "T12:00:00"); x.setDate(x.getDate() + d); return x.toISOString().slice(0, 10); };
+const daysUntil = iso => Math.ceil((new Date(iso + "T00:00:00") - new Date(new Date().toDateString())) / 864e5);
+const doneCount = () => APP_DATA.checklist.filter(c => state.checklist[c.id]).length;
+const telHref = n => "tel:" + n.replace(/\s/g, "");
+const waHref = n => "https://wa.me/" + n.replace(/[^\d]/g, "");
+
+const P = {
+  home: '<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  bed: '<path d="M3 19V6M3 15h18M21 19v-4a3 3 0 0 0-3-3h-8v3"/><circle cx="6.5" cy="11.5" r="1.5"/>',
+  headset: '<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/>',
+  back: '<path d="M15 18l-6-6 6-6"/>', chev: '<path d="M9 6l6 6-6 6"/>', check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  phone: '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+  chat: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 21 12z"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  pin: '<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+  cal: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/>',
+  heart: '<path d="M12 20s-7.5-4.6-9.3-9.2C1.4 7.3 3.6 4 7 4c2 0 3.7 1.2 5 3 1.3-1.8 3-3 5-3 3.4 0 5.6 3.3 4.3 6.8C19.5 15.4 12 20 12 20z"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
+  ext: '<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
+  building: '<path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16M15 9h4a1 1 0 0 1 1 1v11M2 21h20M8 8h3M8 12h3M8 16h3"/>',
+  alert: '<path d="M12 3.5 21.5 20h-19z"/><path d="M12 10v4M12 17.2v.1"/>',
+  tool: '<path d="M15 4a5 5 0 0 0-4.6 6.9L3 18.3 5.7 21l7.4-7.4A5 5 0 0 0 20 9l-3 3-3-1-1-3z"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>', minus: '<path d="M5 12h14"/>',
+  copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
+  key: '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M14 9l2 2"/>',
+  id: '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.5"/><path d="M5.5 16.5a3.5 3.5 0 0 1 7 0M15 10h3M15 13h3"/>',
+  compass: '<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+  x: '<path d="M6 6l12 12M18 6 6 18"/>',
+  box: '<path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/>',
+  card: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>',
+  door: '<path d="M5 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17M3 21h18M13.5 12v.1"/>',
+  dots: '<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>',
+  extend: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/>'
+};
+const ic = (n, cls) => `<svg class="i ${cls || ""}" viewBox="0 0 24 24" aria-hidden="true">${P[n] || ""}</svg>`;
+
+const CITY_COL = { London: ["#0B1440", "#2B3F94"], Leeds: ["#8E0013", "#D0021B"], Brighton: ["#0F5E6E", "#2A9BB0"], Dublin: ["#1C6B3C", "#3FA36A"] };
+function illo(r) {
+  const [a, b] = CITY_COL[r.city] || CITY_COL.London;
+  let h = 0; for (const ch of r.id) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  let svg = "", x = 4;
+  while (x < 156) {
+    const w = 18 + (h % 16); h = (h * 1103515245 + 12345) >>> 0;
+    const ht = 34 + (h % 50); h = (h * 1103515245 + 12345) >>> 0;
+    svg += `<rect x="${x}" y="${100 - ht}" width="${w}" height="${ht}" rx="2" fill="rgba(255,255,255,${0.14 + (h % 10) / 60})"/>`;
+    for (let wy = 100 - ht + 6; wy < 92; wy += 9) for (let wx = x + 4; wx < x + w - 4; wx += 7)
+      if ((wx * wy + h) % 5) svg += `<rect x="${wx}" y="${wy}" width="3" height="4" fill="rgba(255,255,255,.55)"/>`;
+    x += w + 3;
+  }
+  return `<div class="illo" style="position:absolute;inset:0;background:linear-gradient(140deg,${a},${b})"><span class="city">${esc(r.city)}</span><svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMax slice">${svg}</svg></div>`;
+}
+const photoImg = (src, fallback, alt) => `<img src="${src}" alt="${esc(alt || "")}" loading="lazy" onerror="${fallback ? `this.onerror=null;this.src='${fallback}'` : "this.remove()"}">`;
+function resThumb(r) { return illo(r) + (r.photo ? photoImg(r.photo, "", r.name) : ""); }
+
+/* ------------------------------ shell ------------------------------ */
+function langToggle() {
+  return `<div class="lang" role="group" aria-label="Language">
+    <button class="${state.lang === "en" ? "on" : ""}" data-action="lang" data-lang="en">EN</button>
+    <button class="${state.lang === "tr" ? "on" : ""}" data-action="lang" data-lang="tr">TR</button></div>`;
+}
+function appbar(title) {
+  if (!title) return `<header class="appbar"><div class="logo"><span class="go">Go</span><span class="br">Britanya</span></div>${langToggle()}</header>`;
+  return `<header class="appbar"><button class="iconbtn" data-action="back" aria-label="Back">${ic("back")}</button><div class="title">${esc(title)}</div>${langToggle()}</header>`;
+}
+function tabbar() {
+  const tabs = [["home", "home", t("tabHome")], ["stay", "bed", t("tabStay")], ["support", "headset", t("tabSupport")]];
+  return `<nav class="tabbar">${tabs.map(([id, icon, lbl]) =>
+    `<button class="tab ${nav.tab === id && !nav.stack.length ? "on" : ""} ${nav.tab === id && nav.stack.length ? "on" : ""}" data-action="tab" data-tab="${id}">${ic(icon)}<span>${lbl}</span></button>`).join("")}</nav>`;
+}
+
+function render(opts = {}) {
+  const main = document.getElementById("main");
+  const keep = opts.keepScroll && main ? main.scrollTop : 0;
+  const top = nav.stack[nav.stack.length - 1];
+  let title = null, body;
+  if (!top) body = { home: screenHome, stay: screenStay, support: screenSupport }[nav.tab]();
+  else if (top.name === "extension") { title = t("extTitle"); body = screenExtension(); }
+  else if (top.name === "request") { title = L(I18N[state.lang].reqTitle[(state.requests.find(r => r.id === top.id) || {}).type] || ""); body = screenRequest(top.id, top.fresh); }
+  else if (top.name === "explore") { title = t("explore"); body = screenExplore(); }
+  else if (top.name === "residence") { title = resById(top.id).short; body = screenResidence(top.id); }
+  $app.innerHTML = appbar(title) + `<main class="main ${opts.anim ? "fadein" : ""}" id="main">${body}</main>` + tabbar() + renderSheet();
+  document.documentElement.lang = state.lang;
+  const m = document.getElementById("main");
+  m.scrollTop = keep;
+  m.addEventListener("scroll", () => document.querySelector(".appbar").classList.toggle("scrolled", m.scrollTop > 4), { passive: true });
+  renderPitch();
+}
+function go(tab) { nav.tab = tab; nav.stack = []; ui.sheet = null; render({ anim: true }); }
+function push(view) { nav.stack.push(view); render({ anim: true }); }
+function back() { nav.stack.pop(); render({ anim: true }); }
+
+/* ------------------------------ Home ------------------------------ */
+function screenHome() {
+  const s = APP_DATA.student, r = resById(s.residenceId), d = daysUntil(s.contractStart), n = doneCount(), tot = APP_DATA.checklist.length;
+  const hr = new Date().getHours(), greet = hr < 12 ? t("morning") : hr < 18 ? t("afternoon") : t("evening");
+  const badge = d > 0 ? t("checkinIn", d) : d === 0 ? t("checkinToday") : t("atHome");
+  return `
+  <section class="pad">
+    <p class="eyebrow">${greet}</p>
+    <h1 class="h1">${t("hi")} ${esc(s.firstName)}</h1>
+    <button class="stay-card" data-action="tab" data-tab="stay">
+      <div class="top"><span class="pill pill--glass">${ic("clock")} ${badge}</span>${ic("chev")}</div>
+      <h2>${esc(r.short)}</h2>
+      <p>${esc(r.area)} · ${esc(r.city)}</p>
+      <div class="meta">${ic("cal")} ${fmtDate(s.contractStart, { weekday: "short", day: "numeric", month: "short" })} · 15:00</div>
+      <div class="bar"><div style="width:${(n / tot) * 100}%"></div></div>
+      <small>${t("checklistProgress", n, tot)}</small>
+    </button>
+  </section>
+
+  <section class="pad sec">
+    <div class="qa">
+      <button data-action="push" data-view="extension"><span class="ico red">${ic("extend")}</span>${t("qaExtend")}</button>
+      <button data-action="sheet" data-sheet="support"><span class="ico">${ic("tool")}</span>${t("qaIssue")}</button>
+      <button data-action="push" data-view="explore"><span class="ico">${ic("compass")}</span>${t("qaExplore")}</button>
+      <a href="${telHref(APP_DATA.contacts.emergency)}"><span class="ico">${ic("phone")}</span>${t("qaSos")}</a>
+    </div>
+  </section>
+
+  <section class="pad sec">
+    <h3 class="h3">${t("perks")} <small>${t("perksSub")}</small></h3>
+    <div class="hscroll">${APP_DATA.perks.map(p => `
+      <div class="perk ${p.cls}">
+        <span class="tag">${esc(L(p.tag))}</span>
+        <h4>${esc(L(p.title))}</h4>
+        <p>${esc(L(p.text))}</p>
+        <div class="foot">
+          ${p.code ? `<button class="code" data-action="copy" data-code="${p.code}" aria-label="${t("copy")}">${p.code} ${ic("copy")}</button>` : "<span></span>"}
+          <a class="more" href="${p.url}" target="_blank" rel="noopener">${t("more")} ${ic("chev")}</a>
+        </div>
+      </div>`).join("")}
+    </div>
+  </section>
+
+  <section class="pad sec">
+    <h3 class="h3">${t("community")}</h3>
+    <div class="card community">
+      <div class="head"><div class="badge">${ic("users")}</div><div><h4>${t("crTitle")}</h4><p>${t("crDesc")}</p></div></div>
+      <div class="groups">${APP_DATA.commonRoom.groups.map(g => `<div class="group"><b>${esc(g.name)}</b>${esc(L(g.text))}</div>`).join("")}</div>
+      <a class="btn btn--ghost" style="margin-top:14px;min-height:48px;font-size:15px" href="${APP_DATA.commonRoom.url}" target="_blank" rel="noopener">${t("crJoin")} ${ic("ext")}</a>
+      <div style="margin-top:16px;font-weight:800;font-size:14px">${t("events")}</div>
+      ${APP_DATA.events.map(e => `
+        <div class="event"><div class="date"><b>${new Date(e.date + "T12:00").getDate()}</b><span>${fmtDate(e.date, { month: "short" })}</span></div>
+        <div><div class="t">${esc(L(e.title))}</div><div class="s">${esc(L(e.place))} · ${esc(resById(APP_DATA.student.residenceId).short)}</div></div></div>`).join("")}
+    </div>
+  </section>
+
+  <section class="pad sec">
+    <h3 class="h3">${t("blog")} <a class="link" href="${SITE}/blog" target="_blank" rel="noopener">${t("seeAll")}</a></h3>
+    ${APP_DATA.blog.map(b => `
+      <a class="card blog" href="${b.url}" target="_blank" rel="noopener">
+        <div class="thumb">${b.img ? photoImg(resById("kirby-street-residence").photo, IMG[b.img], "") : `<div class="gl" style="background:linear-gradient(140deg,${b.icon === "heart" ? "#D0021B,#8E0013" : "#0B1440,#2B3F94"})">${ic(b.icon)}</div>`}</div>
+        <div><div class="k">${esc(L(b.kicker))}</div><h4>${esc(b.title)}</h4><p>${esc(L(b.summary))}</p><span class="rd">${t("readOn")} ${ic("ext")}</span></div>
+      </a>`).join("")}
+  </section>`;
+}
+
+/* ----------------------------- My stay ----------------------------- */
+function screenStay() {
+  const s = APP_DATA.student, r = resById(s.residenceId);
+  const faqIds = ["lost-key", "parcels", "visitors"];
+  return `
+  <section class="pad"><h1 class="h1" style="margin-top:6px">${t("tabStay")}</h1></section>
+  <section class="pad" style="margin-top:14px">
+    <div class="photo">${photoImg(r.roomPhoto || IMG.room, IMG.room, r.name)}</div>
+    <h2 class="h2" style="margin-top:16px">${esc(r.short)}</h2>
+    <p class="muted" style="margin:3px 0 0;font-size:15px">${esc(r.area)} · ${esc(r.city)}</p>
+    <div class="facts">
+      <div class="fact"><span>${t("checkIn")}</span><b>${fmtDate(s.contractStart, { day: "numeric", month: "short" })} · 15:00</b></div>
+      <div class="fact"><span>${t("checkOut")}</span><b>${fmtDate(s.contractEnd, { day: "numeric", month: "short" })} · 10:00</b></div>
+      <div class="fact"><span>${t("room")}</span><b>${esc(s.room.split("· ")[1] || s.room)}</b></div>
+    </div>
+  </section>
+
+  <section class="pad sec">
+    <h3 class="h3">${t("checklist")} <small>${doneCount()}/${APP_DATA.checklist.length}</small></h3>
+    <ul class="checklist">${APP_DATA.checklist.map(c => {
+      const done = state.checklist[c.id];
+      let hint = `<small>${esc(L(c.hint))}</small>`;
+      if (c.id === "arrival" && state.arrival) hint = `<small class="ok">${t("arrivingOn", fmtDate(state.arrival.date, { day: "numeric", month: "short" }), state.arrival.time)}</small>`;
+      return `<li><button class="ck ${done ? "done" : ""}" data-action="check" data-id="${c.id}" aria-pressed="${done}">
+        <span class="box">${ic("check")}</span><span class="txt"><b>${esc(L(c.title))}</b>${hint}</span>${c.id === "arrival" ? ic("chev") : ""}</button></li>`;
+    }).join("")}</ul>
+    <button class="btn btn--red" style="margin-top:16px" data-action="push" data-view="extension">${t("requestExt")}</button>
+  </section>
+
+  <section class="pad sec">
+    <h3 class="h3">${t("included")}</h3>
+    <div class="chips">${APP_DATA.included.map(i => `<span class="chip">${ic("check")}${esc(L(i))}</span>`).join("")}</div>
+  </section>
+
+  <section class="pad sec">
+    <h3 class="h3">${t("yourHome")}</h3>
+    <div class="card">
+      <button class="row" data-action="push" data-view="residence" data-id="${r.id}">
+        <span class="ri">${ic("building")}</span><span class="rt"><b>${esc(r.name)}</b><small>${esc(r.address)}</small></span>${ic("chev")}</button>
+      <a class="row" href="${telHref(APP_DATA.contacts.emergency)}">
+        <span class="ri" style="color:var(--red)">${ic("phone")}</span><span class="rt"><b>${t("sosTitle")}</b><small>${APP_DATA.contacts.emergency}</small></span>${ic("chev")}</a>
+    </div>
+  </section>
+
+  <section class="pad sec">
+    <h3 class="h3">${t("goodToKnow")}</h3>
+    <div class="card faq" style="margin-top:0">${faqIds.map(id => faqItem(APP_DATA.faq.find(f => f.id === id))).join("")}</div>
+  </section>`;
+}
+
+/* --------------------------- Extension ----------------------------- */
+function screenExtension() {
+  const s = APP_DATA.student, r = resById(s.residenceId), w = ui.ext.weeks;
+  return `
+  <section class="pad" style="padding-top:14px">
+    <div class="card mini-res"><div class="th">${photoImg(r.photo || IMG.kirby, IMG.kirby, r.name)}</div>
+      <div><b>${esc(r.name)}</b><small>${esc(r.area)} · ${esc(r.city)}</small></div></div>
+
+    <label class="label">${t("howMany")}</label>
+    <div class="stepper">
+      <button data-action="weeks" data-d="-1" aria-label="-">${ic("minus")}</button>
+      <output id="wOut">${w}<small>${t("weeksWord", w)}</small></output>
+      <button data-action="weeks" data-d="1" aria-label="+">${ic("plus")}</button>
+    </div>
+    <div class="seg">${[2, 4, 8, 12].map(n => `<button class="${n === w ? "on" : ""}" data-action="weeksSet" data-n="${n}">${n} ${state.lang === "tr" ? "hf" : "wk"}</button>`).join("")}</div>
+
+    <div class="card dates">
+      <div><span>${t("currentEnd")}</span><b>${fmtDate(s.contractEnd)}</b></div>
+      <div class="arrow">${ic("chev")}</div>
+      <div class="new"><span>${t("newEnd")}</span><b id="newEnd">${fmtDate(addDays(s.contractEnd, w * 7))}</b></div>
+    </div>
+
+    <label class="label" for="extNote">${t("note")}</label>
+    <textarea id="extNote" class="field" maxlength="500" placeholder="${esc(t("notePh"))}">${esc(ui.ext.note)}</textarea>
+
+    <div class="info">${ic("alert")}<span>${t("extInfo")}</span></div>
+    <button class="btn btn--red" style="margin-top:18px" data-action="submitExt">${t("sendReq")}</button>
+  </section>`;
+}
+
+/* ------------------------ Request detail --------------------------- */
+const STATUS_ORDER = ["new", "in_review", "resolved"];
+const stLabel = st => ({ new: state.lang === "tr" ? "Yeni" : "New", in_review: state.lang === "tr" ? "İnceleniyor" : "In review", resolved: state.lang === "tr" ? "Sonuçlandı" : "Resolved" }[st]);
+function teamLabel(en) {
+  // reverse-lookup the TR label of a stored team name
+  const all = [APP_DATA.teams.arrival(), APP_DATA.teams.enquiry(), ...Object.values(APP_DATA.teams.support)];
+  const hit = all.find(x => x.en === en);
+  if (hit) return L(hit);
+  const m = en.match(/^(.*) team$/); if (m && state.lang === "tr") return `${m[1]} ekibi`;
+  return en;
+}
+function screenRequest(id, fresh) {
+  const q = state.requests.find(r => r.id === id);
+  if (!q) return `<div class="empty">—</div>`;
+  const team = teamLabel(q.assignedTo.team), idx = STATUS_ORDER.indexOf(q.status);
+  const rows = [`<li>${ic("pin")} ${esc(resById(q.residence.id).short)}</li>`];
+  if (q.type === "extension") rows.push(`<li>${ic("cal")} ${t("addWeeks", q.details.additionalWeeks)}</li>`);
+  if (q.type === "arrival") rows.push(`<li>${ic("clock")} ${fmtDate(q.details.arrivalDate, { day: "numeric", month: "short" })} · ${q.details.arrivalTime}</li>`);
+  if (q.type === "support") rows.push(`<li>${ic("tool")} ${esc(L(I18N[state.lang].supCat[q.details.category]))}</li>`);
+  if (q.type === "enquiry") rows[0] = `<li>${ic("pin")} ${esc(q.details.residenceName)}</li>`;
+  rows.push(`<li>${ic("users")} ${t("assignedTo", team)}</li>`);
+  const msg = q.details.note || q.details.message;
+  const steps = [["stepReceived", "stepReceivedHint"], ["stepReview", "stepReviewHint"], ["stepDone", "stepDoneHint"]];
+  return `
+  ${fresh ? `<div class="success"><div class="tick">${ic("check")}</div><h1>${t("received")}</h1><p>${t("assignedMsg", team)}</p></div>` : ""}
+  <section class="pad">
+    <div class="card req">
+      <div class="hd"><h3>${t("reqTitle")[q.type]}</h3><span class="status ${q.status}">${stLabel(q.status)}</span></div>
+      <ul>${rows.join("")}</ul>
+      ${msg ? `<p style="margin:12px 0 0;font-size:14px;color:#3A4166;background:var(--bg);padding:10px 12px;border-radius:12px">“${esc(msg)}”</p>` : ""}
+      <div class="id"><span>${t("reqId")} <b>${q.id}</b></span><span>${fmtDT(q.createdAt)}</span></div>
+    </div>
+    <ol class="timeline">${steps.map((s, i) => `
+      <li class="${i <= idx ? "done" : ""} ${i === idx + 1 ? "cur" : ""}"><span class="dot">${i <= idx ? ic("check") : ""}</span>
+      <div><b>${t(s[0])}</b><small>${t(s[1])}</small></div></li>`).join("")}</ol>
+    ${q.status !== "resolved" ? `<button class="demo" data-action="advance" data-id="${q.id}">${t("demoAdvance")}</button>` : ""}
+    <details class="dev"><summary>${t("payload")}</summary><pre>${esc(JSON.stringify(q, null, 2))}</pre></details>
+    <div style="display:grid;gap:10px;margin-top:18px">
+      ${fresh ? `<button class="btn btn--navy" data-action="tab" data-tab="stay">${t("backStay")}</button>` : ""}
+      <button class="btn btn--ghost" data-action="tab" data-tab="support" data-scroll="reqs">${t("viewReqs")}</button>
+    </div>
+  </section>`;
+}
+
+/* ----------------------------- Support ----------------------------- */
+function faqItem(f) {
+  const a = esc(L(f.a)).replace(/([\w.]+@gobritanya\.com)/g, '<a href="mailto:$1">$1</a>').replace(/(\+44 [\d ]{9,13}\d)/g, m => `<a href="${telHref(m)}">${m}</a>`);
+  return `<details><summary><span>${esc(L(f.q))}</span>${ic("chev")}</summary><div class="ans">${a}</div></details>`;
+}
+function faqList() {
+  const q = ui.faqQ.trim().toLowerCase();
+  const items = APP_DATA.faq.filter(f => (ui.faqCat === "all" || f.cat === ui.faqCat) &&
+    (!q || (L(f.q) + " " + L(f.a)).toLowerCase().includes(q)));
+  return items.length ? items.map(faqItem).join("") : `<div class="empty">${t("noResults")}</div>`;
+}
+function reqRows() {
+  if (!state.requests.length) return `<div class="empty">${t("noReqs")}</div>`;
+  return state.requests.map(q => `
+    <button class="reqrow" data-action="push" data-view="request" data-id="${q.id}">
+      <span class="rt"><b>${t("reqTitle")[q.type]}</b><small>${q.id} · ${fmtDT(q.createdAt)}</small></span>
+      <span class="status ${q.status}">${stLabel(q.status)}</span>${ic("chev")}</button>`).join("");
+}
+function screenSupport() {
+  const c = APP_DATA.contacts;
+  const cats = ["all", "checkin", "stay", "checkout", "payments"];
+  return `
+  <section class="pad"><h1 class="h1" style="margin-top:6px">${t("support")}</h1>
+    <a class="sos" href="${telHref(c.emergency)}">
+      <span class="ri">${ic("phone")}</span>
+      <span><b>${t("sosTitle")}</b><small>${t("sosSub")}</small><span class="num">${c.emergency}</span></span>
+      <span class="call">${t("call")}</span></a>
+    <button class="btn btn--navy" style="margin-top:12px" data-action="sheet" data-sheet="support">${ic("plus")} ${t("newReq")}</button>
+  </section>
+
+  <section class="pad sec" id="reqs">
+    <h3 class="h3">${t("myReqs")} <small>${state.requests.length}</small></h3>
+    <div class="card">${reqRows()}</div>
+  </section>
+
+  <section class="pad sec">
+    <h3 class="h3">${t("contact")}</h3>
+    <div class="card">
+      <a class="row" href="${telHref(c.office)}"><span class="ri">${ic("phone")}</span><span class="rt"><b>${t("cOffice")}</b><small>${c.office} · ${L(c.officeHours)}</small></span>${ic("chev")}</a>
+      <a class="row" href="${waHref(c.whatsapp)}" target="_blank" rel="noopener"><span class="ri" style="color:#1E8E4E">${ic("chat")}</span><span class="rt"><b>${t("cWa")}</b><small>${c.whatsapp} · ${t("cWaSub")}</small></span>${ic("chev")}</a>
+      <a class="row" href="mailto:${c.emailBook}"><span class="ri">${ic("mail")}</span><span class="rt"><b>${t("cBook")}</b><small>${c.emailBook} · ${t("cBookSub")}</small></span>${ic("chev")}</a>
+      <a class="row" href="mailto:${c.emailOps}"><span class="ri">${ic("door")}</span><span class="rt"><b>${t("cOps")}</b><small>${c.emailOps} · ${t("cOpsSub")}</small></span>${ic("chev")}</a>
+      <a class="row" href="mailto:${c.emailFinance}"><span class="ri">${ic("card")}</span><span class="rt"><b>${t("cFin")}</b><small>${c.emailFinance} · ${c.finance}</small></span>${ic("chev")}</a>
+    </div>
+  </section>
+
+  <section class="pad sec">
+    <h3 class="h3">${t("wellbeing")}</h3>
+    <div class="card community">
+      <div class="head"><div class="badge">${ic("heart")}</div><p style="margin:0;color:#3A4166">${t("wellDesc")}</p></div>
+      <div class="chips" style="margin-top:12px">
+        <a class="chip" href="${SITE}/your-ai-mental-health-coach" target="_blank" rel="noopener">${t("wellOllie")} ${ic("ext")}</a>
+        <a class="chip" href="${SITE}/student-minds-offer" target="_blank" rel="noopener">${t("wellMinds")} ${ic("ext")}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="pad sec">
+    <h3 class="h3">${t("faq")}</h3>
+    <div class="search">${ic("search")}<input id="faqSearch" class="field" type="search" placeholder="${esc(t("faqSearch"))}" value="${esc(ui.faqQ)}"></div>
+    <div class="filter">${cats.map(k => `<button class="${ui.faqCat === k ? "on" : ""}" data-action="faqCat" data-cat="${k}">${k === "all" ? t("all") : I18N[state.lang].cat[k]}</button>`).join("")}</div>
+    <div class="card faq" id="faqList">${faqList()}</div>
+    <button class="reset-link" data-action="reset">${t("reset")}</button>
+  </section>`;
+}
+
+/* ----------------------------- Explore ----------------------------- */
+function resList() {
+  const q = ui.resQ.trim().toLowerCase();
+  const items = APP_DATA.residences.filter(r => (ui.resCity === "all" || r.city === ui.resCity) &&
+    (!q || (r.name + " " + r.area + " " + r.address + " " + r.city).toLowerCase().includes(q)));
+  if (!items.length) return `<div class="empty">${t("noResults")}</div>`;
+  return `<p class="muted" style="font-size:13px;font-weight:600;margin:14px 2px 10px">${t("count", items.length)}</p>` + items.map(r => `
+    <button class="card res" data-action="push" data-view="residence" data-id="${r.id}">
+      <div class="th">${resThumb(r)}</div>
+      <div class="rt"><b>${esc(r.name)}</b><small>${ic("pin")} ${esc(r.area)}, ${esc(r.city)}</small>
+        <div class="price">${priceHtml(r)}</div></div>
+    </button>`).join("");
+}
+function priceHtml(r) {
+  if (r.soldOut) return `<span class="so">${t("soldOut")}</span>`;
+  if (r.price == null) return `<span class="na">${t("priceAsk")}</span>`;
+  return `${t("from")} <b>£${r.price}</b>${t("wk")}`;
+}
+function screenExplore() {
+  const cities = ["all", "London", "Leeds", "Brighton", "Dublin"];
+  const cnt = c => (c === "all" ? APP_DATA.residences.length : APP_DATA.residences.filter(r => r.city === c).length);
+  return `
+  <section class="pad" style="padding-top:14px">
+    <div class="search">${ic("search")}<input id="resSearch" class="field" type="search" placeholder="${esc(t("searchRes"))}" value="${esc(ui.resQ)}"></div>
+    <div class="filter">${cities.map(c => `<button class="${ui.resCity === c ? "on" : ""}" data-action="resCity" data-city="${c}">${c === "all" ? t("all") : c}<small>${cnt(c)}</small></button>`).join("")}</div>
+    <div id="resList">${resList()}</div>
+  </section>`;
+}
+function screenResidence(id) {
+  const r = resById(id), mine = id === APP_DATA.student.residenceId;
+  return `
+  <div class="hero">${illo(r)}${r.photo ? photoImg(r.photo, mine ? IMG.kirby : "", r.name) : ""}</div>
+  <div class="detail"><section class="pad">
+    ${mine ? `<span class="pill" style="background:var(--red-tint);color:var(--red)">${ic("home")} ${t("yourHome")}</span>` : ""}
+    <h1 class="h1" style="font-size:28px;margin-top:${mine ? 10 : 0}px">${esc(r.name)}</h1>
+    <div class="addr">${ic("pin")}<span>${esc(r.address)}</span></div>
+    <div class="card pricebox"><span>${r.soldOut || r.price == null ? "" : t("from")}</span><div>${r.soldOut ? `<b style="color:var(--red);font-size:18px">${t("soldOut")}</b>` : r.price == null ? `<b style="font-size:17px">${t("priceAsk")}</b>` : `<b>£${r.price}</b><span>${t("wk")}</span>`}</div></div>
+    <p class="desc">${esc(r.desc || t("descFallback"))}</p>
+    ${r.roomPhoto ? `<h3 class="h3" style="margin-top:22px">${t("roomPhoto")}</h3><div class="photo">${photoImg(r.roomPhoto, "", r.name)}</div>` : ""}
+    ${r.features.length ? `<h3 class="h3 sec" style="margin-top:22px">${t("highlights")}</h3><div class="chips">${r.features.map(f => `<span class="chip">${ic("check")}${esc(f)}</span>`).join("")}</div>` : ""}
+    <h3 class="h3" style="margin-top:22px">${t("everyRes")}</h3>
+    <div class="chips">${t("everyList").map(f => `<span class="chip">${ic("check")}${esc(f)}</span>`).join("")}</div>
+    <div style="display:grid;gap:10px;margin-top:22px">
+      ${mine ? "" : `<button class="btn btn--red" data-action="enquire" data-id="${r.id}">${t("askAbout")}</button>`}
+      <a class="btn btn--ghost" href="${r.url}" target="_blank" rel="noopener">${t("viewWeb")} ${ic("ext")}</a>
+    </div>
+  </section></div>`;
+}
+
+/* ------------------------------ Sheets ----------------------------- */
+function renderSheet() {
+  if (!ui.sheet) return "";
+  let inner = "";
+  if (ui.sheet === "arrival") {
+    const a = state.arrival || { date: APP_DATA.student.contractStart, time: "15:00" };
+    inner = `<h3>${t("arrTitle")}</h3><p class="sub">${t("arrSub")}</p>
+      <div class="two"><div><label class="label" for="arrDate">${t("date")}</label><input id="arrDate" class="field" type="date" value="${a.date}"></div>
+      <div><label class="label" for="arrTime">${t("time")}</label><input id="arrTime" class="field" type="time" value="${a.time}"></div></div>
+      <div class="info warn" id="lateNote" style="${a.time >= "18:00" ? "" : "display:none"}">${ic("alert")}<span>${t("lateNote")}</span></div>
+      <div class="actions"><button class="btn btn--red" data-action="saveArrival">${t("saveArrival")}</button>
+      ${state.arrival ? `<button class="btn btn--ghost" data-action="clearArrival">${t("clear")}</button>` : `<button class="btn btn--ghost" data-action="closeSheet">${t("cancel")}</button>`}</div>`;
+  }
+  if (ui.sheet === "support") {
+    const icons = { maintenance: "tool", payments: "card", checkin: "door", wellbeing: "heart", other: "dots" };
+    inner = `<h3>${t("supTitle")}</h3><p class="sub">${t("supSub")}</p>
+      <label class="label">${t("category")}</label>
+      <div class="cat">${Object.keys(icons).map(k => `<button class="${ui.sup.cat === k ? "on" : ""}" data-action="supCat" data-cat="${k}">${ic(icons[k])}${I18N[state.lang].supCat[k]}</button>`).join("")}</div>
+      <label class="label" for="supMsg">${t("message")}</label>
+      <textarea id="supMsg" class="field" maxlength="800" placeholder="${esc(t("messagePh"))}">${esc(ui.sup.msg)}</textarea>
+      <p class="sub" style="margin-top:10px;font-size:13px">${ic("users")} ${t("assignedTo", L(APP_DATA.teams.support[ui.sup.cat]))}</p>
+      <div class="actions"><button class="btn btn--red" data-action="submitSupport">${t("submit")}</button>
+      <button class="btn btn--ghost" data-action="closeSheet">${t("cancel")}</button></div>`;
+  }
+  return `<div class="sheet-wrap"><div class="scrim" data-action="closeSheet"></div><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${inner}</div></div>`;
+}
+function openSheet(name) { ui.sheet = name; render({ keepScroll: true }); }
+function closeSheet() { ui.sheet = null; render({ keepScroll: true }); }
+
+/* ------------------------------ Toast ------------------------------ */
+let toastTimer;
+function toast(msg) {
+  let el = document.querySelector(".toast");
+  if (!el) { el = document.createElement("div"); el.className = "toast"; document.getElementById("screen").appendChild(el); }
+  el.innerHTML = ic("check") + `<span>${esc(msg)}</span>`;
+  requestAnimationFrame(() => el.classList.add("show"));
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("show"), 2400);
+}
+
+/* ------------------------------ Pitch ------------------------------ */
+function renderPitch() {
+  const el = document.getElementById("pitch");
+  if (!el || getComputedStyle(el).display === "none") return;
+  el.innerHTML = `<div class="logo"><span class="go">Go</span><span class="br">Britanya</span></div>
+    <h2>${t("pitchTitle")}</h2><p class="ver">${t("pitchVer")}</p>
+    <ol>${t("pitch").map((p, i) => `<li><span class="n">${i + 1}</span><span><b>${p[0]}</b>${p[1]}</span></li>`).join("")}</ol>
+    <p class="src">${t("pitchSrc")}</p>
+    <button class="reset" data-action="reset">↺ ${t("reset")}</button>`;
+}
+
+/* ------------------------------ Events ----------------------------- */
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-action]");
+  if (!el) return;
+  const a = el.dataset.action;
+  switch (a) {
+    case "tab": {
+      go(el.dataset.tab);
+      if (el.dataset.scroll) setTimeout(() => { const s = document.getElementById(el.dataset.scroll); if (s) document.getElementById("main").scrollTop = s.offsetTop - 10; }, 0);
+      break;
+    }
+    case "push": push({ name: el.dataset.view, id: el.dataset.id }); break;
+    case "back": back(); break;
+    case "lang": state.lang = el.dataset.lang; save(); render({ keepScroll: true }); break;
+    case "sheet": openSheet(el.dataset.sheet); break;
+    case "closeSheet": closeSheet(); break;
+    case "check": {
+      const id = el.dataset.id;
+      if (id === "arrival") return openSheet("arrival");
+      state.checklist[id] = !state.checklist[id]; save(); render({ keepScroll: true }); break;
+    }
+    case "saveArrival": {
+      const date = document.getElementById("arrDate").value, time = document.getElementById("arrTime").value;
+      if (!date || !time) return;
+      state.arrival = { date, time }; state.checklist.arrival = true;
+      createRequest("arrival", { arrivalDate: date, arrivalTime: time, lateArrival: time >= "18:00" }, APP_DATA.teams.arrival());
+      ui.sheet = null; render({ keepScroll: true }); toast(t("arrivalSaved")); break;
+    }
+    case "clearArrival": state.arrival = null; state.checklist.arrival = false; save(); closeSheet(); break;
+    case "weeks": case "weeksSet": {
+      ui.ext.weeks = a === "weeks" ? Math.min(26, Math.max(1, ui.ext.weeks + +el.dataset.d)) : +el.dataset.n;
+      const n = document.getElementById("extNote"); if (n) ui.ext.note = n.value;
+      render({ keepScroll: true }); break;
+    }
+    case "submitExt": {
+      const s = APP_DATA.student, r = resById(s.residenceId);
+      ui.ext.note = (document.getElementById("extNote") || {}).value || "";
+      const req = createRequest("extension", {
+        additionalWeeks: ui.ext.weeks, currentEndDate: s.contractEnd,
+        requestedEndDate: addDays(s.contractEnd, ui.ext.weeks * 7), note: ui.ext.note.trim()
+      }, APP_DATA.teams.extension(r.city));
+      ui.ext = { weeks: 4, note: "" };
+      nav.stack = [{ name: "request", id: req.id, fresh: true }]; render({ anim: true }); break;
+    }
+    case "advance": {
+      const q = state.requests.find(r => r.id === el.dataset.id);
+      if (q) { q.status = STATUS_ORDER[Math.min(2, STATUS_ORDER.indexOf(q.status) + 1)]; save(); render({ keepScroll: true }); }
+      break;
+    }
+    case "supCat": ui.sup.cat = el.dataset.cat; ui.sup.msg = document.getElementById("supMsg").value; render({ keepScroll: true }); break;
+    case "submitSupport": {
+      const msg = document.getElementById("supMsg").value.trim();
+      if (!msg) { toast(t("needText")); document.getElementById("supMsg").focus(); return; }
+      const team = APP_DATA.teams.support[ui.sup.cat];
+      createRequest("support", { category: ui.sup.cat, message: msg }, team);
+      ui.sup = { cat: "maintenance", msg: "" }; ui.sheet = null;
+      if (nav.tab !== "support" || nav.stack.length) { nav.tab = "support"; nav.stack = []; render({ anim: true }); } else render({ keepScroll: true });
+      toast(t("supSent", L(team))); break;
+    }
+    case "enquire": {
+      const r = resById(el.dataset.id);
+      createRequest("enquiry", { residenceId: r.id, residenceName: r.name, residenceCity: r.city }, APP_DATA.teams.enquiry());
+      toast(t("askSent")); break;
+    }
+    case "faqCat": ui.faqCat = el.dataset.cat; render({ keepScroll: true }); break;
+    case "resCity": ui.resCity = el.dataset.city; render({ keepScroll: true }); break;
+    case "copy": {
+      const code = el.dataset.code;
+      try { navigator.clipboard && navigator.clipboard.writeText(code); } catch (err) {}
+      toast(t("copied", code)); break;
+    }
+    case "reset": {
+      const lang = state.lang; state = defaultState(); state.lang = lang; save();
+      ui = { sheet: null, faqCat: "all", faqQ: "", resCity: "all", resQ: "", ext: { weeks: 4, note: "" }, sup: { cat: "maintenance", msg: "" } };
+      go("home"); toast(t("resetDone")); break;
+    }
+  }
+});
+document.addEventListener("input", e => {
+  const id = e.target.id;
+  if (id === "faqSearch") { ui.faqQ = e.target.value; document.getElementById("faqList").innerHTML = faqList(); }
+  if (id === "resSearch") { ui.resQ = e.target.value; document.getElementById("resList").innerHTML = resList(); }
+  if (id === "extNote") ui.ext.note = e.target.value;
+  if (id === "supMsg") ui.sup.msg = e.target.value;
+  if (id === "arrTime") document.getElementById("lateNote").style.display = e.target.value >= "18:00" ? "" : "none";
+});
+window.addEventListener("resize", renderPitch);
+
+function tick() { const d = new Date(); document.getElementById("clock").textContent = d.getHours() + ":" + String(d.getMinutes()).padStart(2, "0"); }
+tick(); setInterval(tick, 30000);
+render();
+</script>
+</body>
+</html>
