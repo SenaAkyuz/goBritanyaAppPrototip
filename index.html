@@ -72,7 +72,7 @@ svg.i{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-widt
 .card{background:var(--card);border-radius:var(--r-lg);box-shadow:var(--shadow)}
 
 /* ---------- Tab bar ---------- */
-.tabbar{flex:none;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);padding:0 10px calc(env(safe-area-inset-bottom) + 22px);position:relative;z-index:4}
+.tabbar{flex:none;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:0 6px calc(env(safe-area-inset-bottom) + 22px);position:relative;z-index:4}
 .tab{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 2px;font-size:12px;font-weight:600;color:#3A4166;position:relative}
 .tab.on{color:var(--red)}
 .tab.on::before{content:"";position:absolute;top:-1px;left:22%;right:22%;height:3px;border-radius:0 0 3px 3px;background:var(--red)}
@@ -323,6 +323,7 @@ details.dev pre{margin:0;padding:0 14px 14px;font-size:11px;line-height:1.5;whit
 @keyframes fade{from{opacity:0}to{opacity:1}}
 .toast{position:absolute;left:50%;bottom:112px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;font-size:14px;font-weight:600;padding:12px 16px;border-radius:14px;box-shadow:0 10px 24px rgba(11,20,64,.3);opacity:0;transition:all .25s ease;z-index:30;pointer-events:none;display:flex;gap:8px;align-items:center;max-width:86%;width:max-content}
 .toast svg{width:18px;height:18px;stroke:#7EE2A8;stroke-width:2.6}
+.toast.warn svg{stroke:#FFB4BE}
 .toast.show{opacity:1;transform:translateX(-50%)}
 .fadein{animation:fade .22s ease}
 /* ---------- Phones: full-screen app (kept last so it overrides) ---------- */
@@ -335,7 +336,58 @@ details.dev pre{margin:0;padding:0 14px 14px;font-size:11px;line-height:1.5;whit
   .appbar{padding-top:calc(env(safe-area-inset-top) + 10px)!important;padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
   .tabbar{padding-bottom:max(10px,env(safe-area-inset-bottom))}
   .toast{bottom:calc(96px + env(safe-area-inset-bottom))}
-}</style>
+}
+/* ---------- Login ---------- */
+.login{flex:1;display:flex;flex-direction:column;background:#fff;overflow-y:auto;min-height:0}
+.login__top{display:flex;justify-content:flex-end;padding:10px 18px 0}
+.login__brand{background:linear-gradient(150deg,var(--navy) 0%,#1B2A72 100%);margin:12px 18px 0;border-radius:26px;padding:34px 22px 30px;color:#fff;position:relative;overflow:hidden}
+.login__brand::after{content:"";position:absolute;right:-50px;top:-50px;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(208,2,27,.6),rgba(208,2,27,0) 70%)}
+.login__brand .logo{font-size:40px;position:relative;z-index:1}
+.login__brand .logo .go{color:#fff}
+.login__brand p{margin:10px 0 0;font-size:16px;font-weight:600;opacity:.88;position:relative;z-index:1}
+.login__form{padding:26px 18px 30px}
+.login__form h1{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:0}
+.login__form>p{margin:6px 0 0;color:var(--muted);font-size:14.5px}
+.login__or{display:flex;align-items:center;gap:10px;margin:16px 0 12px;color:var(--muted);font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.login__or::before,.login__or::after{content:"";flex:1;height:1px;background:var(--line)}
+.field.err,.has-err .field{border-color:var(--red);background:#FFF7F8}
+.errmsg{color:var(--red);font-size:12.8px;font-weight:600;margin:6px 0 0;display:flex;gap:5px;align-items:center}
+/* ---------- Apply CTA ---------- */
+.apply-cta{display:flex;align-items:center;gap:14px;width:100%;margin-top:12px;padding:16px;border-radius:var(--r-lg);background:linear-gradient(135deg,var(--red),#9E0016);color:#fff;box-shadow:0 10px 24px rgba(208,2,27,.25);text-align:left}
+.apply-cta .ico{width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.18);display:grid;place-items:center;flex:none}
+.apply-cta b{display:block;font-size:17px;font-weight:800}
+.apply-cta small{display:block;font-size:13px;opacity:.9;margin-top:2px;line-height:1.35}
+.apply-cta>svg.i{margin-left:auto;flex:none}
+/* ---------- Application form ---------- */
+.fcard{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow);padding:4px 16px 18px;margin-top:14px}
+.fsec{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin:16px 0 0}
+.fsec svg{width:16px;height:16px}
+.fg{margin-top:16px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid .fg{min-width:0}
+.flabel{display:block;font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#3A4166;margin-bottom:8px}
+.flabel .opt{text-transform:none;letter-spacing:0;font-weight:600;color:var(--muted);font-size:12px}
+.flabel .reqmark{color:var(--red)}
+.field{min-width:0}
+select.field{appearance:none;-webkit-appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B1440' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center/18px;padding-right:38px}
+select.field:disabled{opacity:.55}
+.has-err select.field{background-color:#FFF7F8}
+input[type=date].field{min-height:50px}
+.phone{display:grid;grid-template-columns:108px 1fr;gap:8px}
+.rooms{display:flex;flex-wrap:wrap;gap:8px}
+.rooms button{padding:10px 14px;border-radius:999px;border:1.5px solid var(--line);font-weight:700;font-size:13.5px;background:#fff;display:inline-flex;gap:6px;align-items:center;color:#2A3156}
+.rooms button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.rooms button svg{width:15px;height:15px;stroke-width:2.6}
+.hint{font-size:12.3px;color:var(--muted);margin:6px 0 0;line-height:1.4}
+.consent{display:flex;gap:12px;align-items:flex-start;font-size:13.5px;line-height:1.45;color:#3A4166;cursor:pointer}
+.consent input{width:22px;height:22px;accent-color:var(--navy);flex:none;margin:1px 0 0}
+.consent a{color:var(--red);font-weight:700}
+.has-err .consent{color:var(--red)}
+.sumrow{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--line);font-size:14.5px}
+.sumrow:first-of-type{border-top:0}
+.sumrow span{flex:none;width:118px;color:var(--muted);font-size:13px;font-weight:600}
+.sumrow b{font-weight:700;min-width:0;word-break:break-word}
+</style>
 </head>
 <body>
 <div class="stage">
@@ -604,6 +656,33 @@ const APP_DATA = {
     R("your-tribe-southwark","Your TRIBE Southwark","London","Southwark","28 Ruby Street, London SE15 1LL",238,"",["On-site gym","Rooftop terrace","Shared kitchen"])
   ],
 
+  // Residence application form — mirrors the website's Quick Enquiry form
+  // (book.gobritanya.com/quick-enquiry): Full Name*, School Name*, Email*, Phone* (code + number),
+  // Additional Information (check-in date, length of stay, weekly budget, school, location) and
+  // Terms & Privacy consent*. The "Additional Information" items are split into structured fields here.
+  application: {
+    roomTypes: [   // FAQ › "What types of rooms does GoBritanya offer?"
+      { id: "ensuite",    en: "En-suite room",        tr: "En-suite oda" },
+      { id: "studio",     en: "Studio",               tr: "Stüdyo" },
+      { id: "twin",       en: "Twin room",            tr: "İki kişilik oda (Twin)" },
+      { id: "dual",       en: "Dual occupancy studio", tr: "Çift kişilik stüdyo" },
+      { id: "apartment",  en: "Multi-room apartment", tr: "Çok odalı daire" },
+      { id: "accessible", en: "Accessible studio",    tr: "Erişilebilir stüdyo" }
+    ],
+    // Weekly ranges (all GoBritanya prices are per week; residences start from £179–£598)
+    budgets: [
+      { id: "under_250", en: "Under £250 / week", tr: "Haftalık £250 altı" },
+      { id: "250_350",   en: "£250–£350 / week",  tr: "Haftalık £250–£350" },
+      { id: "350_450",   en: "£350–£450 / week",  tr: "Haftalık £350–£450" },
+      { id: "450_600",   en: "£450–£600 / week",  tr: "Haftalık £450–£600" },
+      { id: "600_plus",  en: "£600+ / week",      tr: "Haftalık £600 üzeri" }
+    ],
+    phoneCodes: [["+44","UK"],["+90","TR"],["+86","CN"],["+852","HK"],["+886","TW"],["+91","IN"],["+92","PK"],["+971","AE"],["+966","SA"],["+353","IE"],["+1","US/CA"],["+33","FR"],["+49","DE"],["+39","IT"],["+34","ES"],["+234","NG"],["+60","MY"],["+65","SG"],["+62","ID"],["+84","VN"],["+81","JP"],["+82","KR"],["+7","KZ/RU"],["+380","UA"],["+20","EG"]],
+    minWeeks: 2, maxWeeks: 51,   // FAQ › "How long can I book a room for?"
+    termsUrl: SITE + "/terms-conditions",
+    privacyUrl: SITE + "/privacy-policy"
+  },
+
   // Seed request so "My requests" isn't empty — SAMPLE
   seedRequests: [
     { id: "REQ-2026-0007", type: "support", status: "resolved", createdAt: "2026-11-10T10:12:00.000Z", source: "student_app", sample: true,
@@ -628,6 +707,30 @@ function R(id, name, city, area, address, price, desc, features, short) {
 const I18N = {
   en: {
     tabHome: "Home", tabStay: "My stay", tabSupport: "Support",
+    tabApply: "Apply", hiGuest: "Hi there", logout: "Log out",
+    loginTag: "Student Living, Elevated", loginTitle: "Welcome back", loginSub: "Log in to manage your stay and applications.",
+    email: "Email", password: "Password", login: "Log in", or: "or", guest: "Continue as guest",
+    emailInvalid: "Please enter a valid email address",
+    applyCta: "Apply for a residence", applyCtaSub: "London, Leeds, Brighton & Dublin · from £179/week",
+    applyThis: "Apply for this residence",
+    applyTitle: "Apply for a residence", applySub: "Tell us what you're looking for — our team will get back to you within 1 business day with the best options.",
+    secYou: "About you", secStay: "Your stay", secMore: "Anything else?",
+    firstName: "First name", lastName: "Last name", phone: "Phone", school: "School / university", schoolPh: "e.g. University College London",
+    nationality: "Nationality", nationalityPh: "e.g. Turkish", optional: "(optional)",
+    city: "City", selectCity: "Select a city…", residence: "Residence", anyRes: "No preference", cityFirst: "Select a city first",
+    roomType: "Room type", selectAll: "select all that apply",
+    checkInDate: "Check-in date", weeks: "Stay (weeks)", weeksShort: "Length of stay", weeksN: w => `${w} weeks`,
+    weeksHint: (a, b) => `Between ${a} and ${b} weeks`,
+    budget: "Weekly budget", selectRange: "Select a range…",
+    notes: "Notes / special requests", notesPh: "e.g. same-gender flat, living with a friend, accessibility needs…",
+    consent: (tu, pu) => `I have read and understood the <a href="${tu}" target="_blank" rel="noopener">Terms & Conditions</a> and <a href="${pu}" target="_blank" rel="noopener">Privacy Policy</a>.`,
+    consentReq: "Please accept the Terms & Conditions and Privacy Policy",
+    required: "This field is required", phoneInvalid: "Please enter a valid phone number", datePast: "Please choose a future date",
+    fixErrors: "Please complete the highlighted fields.",
+    submitApp: "Submit application", applyNext: "Next step: we'll send you an offer — no payment is taken now.",
+    myApps: "My applications",
+    appDoneTitle: "Application", appReceived: "Application received", appReceivedSub: "Our team will get back to you within 1 business day.",
+    appSummary: "Application summary", sumName: "Name", appId: "Application ID", backHome: "Back to Home",
     morning: "Good morning", afternoon: "Good afternoon", evening: "Good evening",
     hi: "Hi", sample: "Sample", samplePhoto: "Sample photo",
     checkinIn: d => `Check-in in ${d} day${d === 1 ? "" : "s"}`, checkinToday: "Check-in today", atHome: "You're home",
@@ -683,6 +786,7 @@ const I18N = {
     pitchTitle: "Student App", pitchVer: "Clickable prototype · v0.1",
     pitch: [
       ["Arrival made easy", "Countdown, arrival checklist and arrival time — no emails needed."],
+      ["Apply in one screen", "Residence application with the same fields as the website form, ready for HubSpot."],
       ["Requests in two taps", "Extensions and support requests, tracked from New to Resolved."],
       ["Perks only residents get", "Go City 10%, £500 referral vouchers, Ollie AI, welcome packs."],
       ["A community, not just a room", "The Common Room, residence socials and blog guides."]
@@ -691,6 +795,30 @@ const I18N = {
   },
   tr: {
     tabHome: "Ana sayfa", tabStay: "Konaklamam", tabSupport: "Destek",
+    tabApply: "Başvur", hiGuest: "Merhaba", logout: "Çıkış yap",
+    loginTag: "Student Living, Elevated", loginTitle: "Tekrar hoş geldin", loginSub: "Konaklamanı ve başvurularını yönetmek için giriş yap.",
+    email: "E-posta", password: "Şifre", login: "Giriş yap", or: "veya", guest: "Misafir olarak devam et",
+    emailInvalid: "Lütfen geçerli bir e-posta adresi gir",
+    applyCta: "Rezidans için başvur", applyCtaSub: "London, Leeds, Brighton ve Dublin · haftalık £179'dan başlayan fiyatlarla",
+    applyThis: "Bu rezidans için başvur",
+    applyTitle: "Rezidans başvurusu", applySub: "Ne aradığını anlat; ekibimiz 1 iş günü içinde en uygun seçeneklerle sana dönecek.",
+    secYou: "Hakkında", secStay: "Konaklama", secMore: "Eklemek istediğin bir şey var mı?",
+    firstName: "Ad", lastName: "Soyad", phone: "Telefon", school: "Okul / üniversite", schoolPh: "örn. University College London",
+    nationality: "Uyruk", nationalityPh: "örn. Türk", optional: "(opsiyonel)",
+    city: "Şehir", selectCity: "Şehir seç…", residence: "Rezidans", anyRes: "Fark etmez", cityFirst: "Önce şehir seç",
+    roomType: "Oda tipi", selectAll: "uygun olanları seç",
+    checkInDate: "Giriş tarihi", weeks: "Süre (hafta)", weeksShort: "Kalış süresi", weeksN: w => `${w} hafta`,
+    weeksHint: (a, b) => `${a} ile ${b} hafta arası`,
+    budget: "Haftalık bütçe", selectRange: "Aralık seç…",
+    notes: "Not / özel istekler", notesPh: "örn. aynı cinsiyetten daire, arkadaşımla kalmak, erişilebilirlik ihtiyacı…",
+    consent: (tu, pu) => `<a href="${tu}" target="_blank" rel="noopener">Şartlar ve Koşullar</a> ile <a href="${pu}" target="_blank" rel="noopener">Gizlilik Politikası</a>'nı okudum ve anladım.`,
+    consentReq: "Lütfen Şartlar ve Koşullar ile Gizlilik Politikası'nı onayla",
+    required: "Bu alan zorunlu", phoneInvalid: "Lütfen geçerli bir telefon numarası gir", datePast: "Lütfen ileri bir tarih seç",
+    fixErrors: "Lütfen işaretli alanları doldur.",
+    submitApp: "Başvuruyu gönder", applyNext: "Sonraki adım: sana bir teklif göndereceğiz; şu an ödeme alınmaz.",
+    myApps: "Başvurularım",
+    appDoneTitle: "Başvuru", appReceived: "Başvurun alındı", appReceivedSub: "Ekibimiz 1 iş günü içinde sana dönecek.",
+    appSummary: "Başvuru özeti", sumName: "Ad soyad", appId: "Başvuru no", backHome: "Ana sayfaya dön",
     morning: "Günaydın", afternoon: "İyi günler", evening: "İyi akşamlar",
     hi: "Merhaba", sample: "Örnek içerik", samplePhoto: "Örnek görsel",
     checkinIn: d => `Check-in'e ${d} gün`, checkinToday: "Check-in bugün", atHome: "Evindesin",
@@ -746,6 +874,7 @@ const I18N = {
     pitchTitle: "Öğrenci Uygulaması", pitchVer: "Tıklanabilir prototip · v0.1",
     pitch: [
       ["Kolay varış", "Geri sayım, varış listesi ve varış saati. E-posta trafiği yok."],
+      ["Tek ekranda başvuru", "Web sitesindeki formla aynı alanlarda rezidans başvurusu, HubSpot'a hazır."],
       ["İki dokunuşla talep", "Uzatma ve destek talepleri, Yeni'den Sonuçlandı'ya kadar takip edilir."],
       ["Sadece öğrencilere avantajlar", "Go City %10, £500 referans kuponu, Ollie AI, hoş geldin paketleri."],
       ["Oda değil, topluluk", "The Common Room, konut etkinlikleri ve blog rehberleri."]
@@ -755,22 +884,21 @@ const I18N = {
 };
 
 /* ============================ 3. STATE ============================== */
-const STORE_KEY = "gobritanya_student_proto_v1";
+// All data lives in memory only (no localStorage) — it resets when the page is reloaded.
 function defaultState() {
   return {
     lang: "en",
+    session: null,                      // { mode: "user" | "guest", email, firstName }
     checklist: { arrival: false, id: false, keys: false },
     arrival: null,                      // { date, time }
     requests: JSON.parse(JSON.stringify(APP_DATA.seedRequests)),
-    seq: 8
+    applications: [],                   // residence applications → HubSpot / management portal later
+    seq: 8,
+    appSeq: 1
   };
 }
-function loadState() {
-  try { const s = JSON.parse(localStorage.getItem(STORE_KEY)); if (s && s.requests) return Object.assign(defaultState(), s); } catch (e) {}
-  return defaultState();
-}
-let state = loadState();
-function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {} }
+let state = defaultState();
+function save() { /* in-memory prototype: nothing to persist */ }
 
 // Single place where requests are created → later: POST to portal API / HubSpot
 function createRequest(type, details, team) {
@@ -781,7 +909,7 @@ function createRequest(type, details, team) {
     status: "new",                          // new | in_review | resolved
     createdAt: new Date().toISOString(),
     source: "student_app",
-    student: { id: s.id, name: `${s.firstName} ${s.lastInitial}`, email: s.email },
+    student: sessionStudent(),
     residence: { id: r.id, name: r.name, city: r.city },
     assignedTo: { team: team.en },          // stored in English for the portal
     details,
@@ -792,10 +920,82 @@ function createRequest(type, details, team) {
   return req;
 }
 
+function sessionStudent() {
+  const s = APP_DATA.student, se = state.session;
+  if (se && se.mode === "user") return { id: s.id, name: se.firstName || se.email, email: se.email };
+  if (se && se.mode === "guest") return { id: null, name: "Guest", email: null };
+  return { id: s.id, name: `${s.firstName} ${s.lastInitial}`, email: s.email };
+}
+function nameFromEmail(email) {
+  const first = (email.split("@")[0] || "").split(/[._\-+\d]+/).filter(Boolean)[0] || "";
+  return first ? first.charAt(0).toLocaleUpperCase() + first.slice(1).toLowerCase() : "";
+}
+
+// Single place where residence applications are created → later: POST to HubSpot / portal API
+function createApplication(a) {
+  const res = a.residence ? resById(a.residence) : null, now = new Date().toISOString();
+  const roomLabels = a.roomTypes.map(id => APP_DATA.application.roomTypes.find(r => r.id === id).en);
+  const budget = APP_DATA.application.budgets.find(b => b.id === a.budget);
+  const app = {
+    id: `APP-${new Date().getFullYear()}-${String(state.appSeq++).padStart(4, "0")}`,
+    type: "residence_application",
+    status: "new",                                   // new | in_review | offer_sent | booked | closed
+    createdAt: now,
+    source: "student_app",
+    language: state.lang,
+    applicant: {
+      firstName: a.firstName.trim(), lastName: a.lastName.trim(),
+      fullName: `${a.firstName.trim()} ${a.lastName.trim()}`,
+      email: a.email.trim(), phone: `${a.phoneCode} ${a.phone.trim()}`,
+      nationality: a.nationality.trim() || null, school: a.school.trim()
+    },
+    stay: {
+      city: a.city, residenceId: res ? res.id : null, residenceName: res ? res.name : null,
+      roomTypes: roomLabels, checkInDate: a.checkIn, lengthOfStayWeeks: +a.weeks,
+      weeklyBudget: budget ? budget.en : null
+    },
+    notes: a.note.trim() || null,
+    consent: { termsAndPrivacy: true, acceptedAt: now },
+    assignedTo: { team: "Sales team" },
+    // Same fields as the website's Quick Enquiry form (book.gobritanya.com/quick-enquiry)
+    websiteForm: {
+      booking_name: `${a.firstName.trim()} ${a.lastName.trim()}`,
+      booking_university_name: a.school.trim(),
+      booking_email: a.email.trim(),
+      booking_phone_code: a.phoneCode,
+      booking_phone: a.phone.trim(),
+      booking_additional_info: [
+        `Location: ${a.city}${res ? " – " + res.name : ""}`,
+        `Check-in: ${a.checkIn}`, `Length of stay: ${a.weeks} weeks`,
+        budget ? `Weekly budget: ${budget.en}` : "", roomLabels.length ? `Room type: ${roomLabels.join(", ")}` : "",
+        a.nationality.trim() ? `Nationality: ${a.nationality.trim()}` : "", a.note.trim() ? `Notes: ${a.note.trim()}` : ""
+      ].filter(Boolean).join("\n"),
+      booking_gdpr: true
+    },
+    integration: { hubspot: { objectType: "deal", pipeline: "residence_applications", synced: false, externalId: null } }
+  };
+  state.applications.unshift(app);
+  console.log("[GoBritanya] New residence application", app);
+  console.log("[GoBritanya] All applications", state.applications);
+  return app;
+}
+// Inspect from the browser console: GoBritanya.applications / GoBritanya.requests
+window.GoBritanya = { get applications() { return state.applications; }, get requests() { return state.requests; } };
+
 /* ============================ 4. APP ================================ */
 const $app = document.getElementById("app");
 const nav = { tab: "home", stack: [] };
-let ui = { sheet: null, faqCat: "all", faqQ: "", resCity: "all", resQ: "", ext: { weeks: 4, note: "" }, sup: { cat: "maintenance", msg: "" } };
+function blankApp() {
+  const se = state.session || {};
+  return { firstName: se.firstName || "", lastName: "", email: se.email || "", phoneCode: "+44", phone: "",
+           nationality: "", school: "", city: "", residence: "", roomTypes: [], checkIn: "", weeks: "",
+           budget: "", note: "", consent: false };
+}
+function freshUi() {
+  return { sheet: null, faqCat: "all", faqQ: "", resCity: "all", resQ: "", ext: { weeks: 4, note: "" },
+           sup: { cat: "maintenance", msg: "" }, loginEmail: "", loginErr: false, app: blankApp(), appErrors: {} };
+}
+let ui = freshUi();
 
 const t = (k, ...a) => { const v = I18N[state.lang][k]; return typeof v === "function" ? v(...a) : v; };
 const L = o => (o == null ? "" : typeof o === "string" ? o : (o[state.lang] || o.en));
@@ -839,6 +1039,8 @@ const P = {
   card: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>',
   door: '<path d="M5 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17M3 21h18M13.5 12v.1"/>',
   dots: '<circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/>',
+  apply: '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M12 11v6M9 14h6"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
   extend: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/>'
 };
 const ic = (n, cls) => `<svg class="i ${cls || ""}" viewBox="0 0 24 24" aria-hidden="true">${P[n] || ""}</svg>`;
@@ -872,7 +1074,7 @@ function appbar(title) {
   return `<header class="appbar"><button class="iconbtn" data-action="back" aria-label="Back">${ic("back")}</button><div class="title">${esc(title)}</div>${langToggle()}</header>`;
 }
 function tabbar() {
-  const tabs = [["home", "home", t("tabHome")], ["stay", "bed", t("tabStay")], ["support", "headset", t("tabSupport")]];
+  const tabs = [["home", "home", t("tabHome")], ["apply", "apply", t("tabApply")], ["stay", "bed", t("tabStay")], ["support", "headset", t("tabSupport")]];
   return `<nav class="tabbar">${tabs.map(([id, icon, lbl]) =>
     `<button class="tab ${nav.tab === id && !nav.stack.length ? "on" : ""} ${nav.tab === id && nav.stack.length ? "on" : ""}" data-action="tab" data-tab="${id}">${ic(icon)}<span>${lbl}</span></button>`).join("")}</nav>`;
 }
@@ -880,9 +1082,12 @@ function tabbar() {
 function render(opts = {}) {
   const main = document.getElementById("main");
   const keep = opts.keepScroll && main ? main.scrollTop : 0;
+  document.documentElement.lang = state.lang;
+  if (!state.session) { $app.innerHTML = screenLogin(); renderPitch(); return; }
   const top = nav.stack[nav.stack.length - 1];
   let title = null, body;
-  if (!top) body = { home: screenHome, stay: screenStay, support: screenSupport }[nav.tab]();
+  if (!top) body = { home: screenHome, apply: screenApply, stay: screenStay, support: screenSupport }[nav.tab]();
+  else if (top.name === "appDone") { title = t("appDoneTitle"); body = screenAppDone(top.id); }
   else if (top.name === "extension") { title = t("extTitle"); body = screenExtension(); }
   else if (top.name === "request") { title = L(I18N[state.lang].reqTitle[(state.requests.find(r => r.id === top.id) || {}).type] || ""); body = screenRequest(top.id, top.fresh); }
   else if (top.name === "explore") { title = t("explore"); body = screenExplore(); }
@@ -906,7 +1111,7 @@ function screenHome() {
   return `
   <section class="pad">
     <p class="eyebrow">${greet}</p>
-    <h1 class="h1">${t("hi")} ${esc(s.firstName)}</h1>
+    <h1 class="h1">${state.session.mode === "user" && state.session.firstName ? `${t("hi")} ${esc(state.session.firstName)}` : t("hiGuest")}</h1>
     <button class="stay-card" data-action="tab" data-tab="stay">
       <div class="top"><span class="pill pill--glass">${ic("clock")} ${badge}</span>${ic("chev")}</div>
       <h2>${esc(r.short)}</h2>
@@ -914,6 +1119,10 @@ function screenHome() {
       <div class="meta">${ic("cal")} ${fmtDate(s.contractStart, { weekday: "short", day: "numeric", month: "short" })} · 15:00</div>
       <div class="bar"><div style="width:${(n / tot) * 100}%"></div></div>
       <small>${t("checklistProgress", n, tot)}</small>
+    </button>
+    <button class="apply-cta" data-action="tab" data-tab="apply">
+      <span class="ico">${ic("apply")}</span>
+      <span><b>${t("applyCta")}</b><small>${t("applyCtaSub")}</small></span>${ic("chev")}
     </button>
   </section>
 
@@ -1150,7 +1359,8 @@ function screenSupport() {
     <div class="search">${ic("search")}<input id="faqSearch" class="field" type="search" placeholder="${esc(t("faqSearch"))}" value="${esc(ui.faqQ)}"></div>
     <div class="filter">${cats.map(k => `<button class="${ui.faqCat === k ? "on" : ""}" data-action="faqCat" data-cat="${k}">${k === "all" ? t("all") : I18N[state.lang].cat[k]}</button>`).join("")}</div>
     <div class="card faq" id="faqList">${faqList()}</div>
-    <button class="reset-link" data-action="reset">${t("reset")}</button>
+    <button class="reset-link" data-action="logout">${t("logout")}</button>
+    <button class="reset-link" style="margin-top:10px" data-action="reset">${t("reset")}</button>
   </section>`;
 }
 
@@ -1197,10 +1407,158 @@ function screenResidence(id) {
     <h3 class="h3" style="margin-top:22px">${t("everyRes")}</h3>
     <div class="chips">${t("everyList").map(f => `<span class="chip">${ic("check")}${esc(f)}</span>`).join("")}</div>
     <div style="display:grid;gap:10px;margin-top:22px">
-      ${mine ? "" : `<button class="btn btn--red" data-action="enquire" data-id="${r.id}">${t("askAbout")}</button>`}
+      ${mine ? "" : `<button class="btn btn--red" data-action="applyFor" data-id="${r.id}">${ic("apply")} ${t("applyThis")}</button>`}
       <a class="btn btn--ghost" href="${r.url}" target="_blank" rel="noopener">${t("viewWeb")} ${ic("ext")}</a>
     </div>
   </section></div>`;
+}
+
+/* ------------------------------ Login ------------------------------ */
+function screenLogin() {
+  return `<div class="login fadein">
+    <div class="login__top">${langToggle()}</div>
+    <div class="login__brand">
+      <div class="logo"><span class="go">Go</span><span class="br">Britanya</span></div>
+      <p>${t("loginTag")}</p>
+    </div>
+    <div class="login__form">
+      <h1>${t("loginTitle")}</h1>
+      <p>${t("loginSub")}</p>
+      <label class="label" for="lgEmail">${t("email")}</label>
+      <input id="lgEmail" class="field ${ui.loginErr ? "err" : ""}" type="email" inputmode="email" autocomplete="email" placeholder="name@example.com" value="${esc(ui.loginEmail)}">
+      ${ui.loginErr ? `<p class="errmsg">${ic("alert")} ${t("emailInvalid")}</p>` : ""}
+      <label class="label" for="lgPass">${t("password")}</label>
+      <input id="lgPass" class="field" type="password" autocomplete="current-password" placeholder="••••••••">
+      <button class="btn btn--red" style="margin-top:22px" data-action="login">${t("login")}</button>
+      <div class="login__or">${t("or")}</div>
+      <button class="btn btn--ghost" data-action="guest">${t("guest")}</button>
+    </div>
+  </div>`;
+}
+
+/* --------------------------- Application --------------------------- */
+const CITIES = [...new Set(APP_DATA.residences.map(r => r.city))];
+const todayIso = () => { const d = new Date(); d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0, 10); };
+function appLabel(key, label, optional) {
+  return `<label class="flabel" for="ap_${key}">${label}${optional ? ` <span class="opt">${t("optional")}</span>` : ` <span class="reqmark">*</span>`}</label>`;
+}
+const appErr = key => (ui.appErrors[key] ? `<p class="errmsg">${ic("alert")} ${ui.appErrors[key]}</p>` : "");
+function appInput(key, label, o = {}) {
+  const a = ui.app;
+  return `<div class="fg ${ui.appErrors[key] ? "has-err" : ""}" data-fg="${key}">${appLabel(key, label, o.optional)}
+    <input id="ap_${key}" data-app="${key}" class="field" type="${o.type || "text"}" ${o.attrs || ""} placeholder="${esc(o.ph || "")}" value="${esc(a[key])}">
+    ${o.hint ? `<p class="hint">${o.hint}</p>` : ""}${appErr(key)}</div>`;
+}
+function appSelect(key, label, options, o = {}) {
+  const a = ui.app;
+  return `<div class="fg ${ui.appErrors[key] ? "has-err" : ""}" data-fg="${key}">${appLabel(key, label, o.optional)}
+    <select id="ap_${key}" data-app="${key}" class="field" ${o.disabled ? "disabled" : ""}>
+      <option value="">${esc(o.ph || "")}</option>
+      ${options.map(([v, l, dis]) => `<option value="${esc(v)}" ${a[key] === v ? "selected" : ""} ${dis ? "disabled" : ""}>${esc(l)}</option>`).join("")}
+    </select>${o.hint ? `<p class="hint">${o.hint}</p>` : ""}${appErr(key)}</div>`;
+}
+function screenApply() {
+  const a = ui.app, cfg = APP_DATA.application, hasErr = Object.keys(ui.appErrors).length;
+  const resOpts = a.city ? APP_DATA.residences.filter(r => r.city === a.city)
+    .map(r => [r.id, r.name + (r.soldOut ? ` — ${t("soldOut")}` : r.price ? ` — ${t("from")} £${r.price}${t("wk")}` : ""), r.soldOut]) : [];
+  const mine = state.applications;
+  return `
+  <section class="pad">
+    <h1 class="h1" style="margin-top:6px">${t("applyTitle")}</h1>
+    <p class="muted" style="margin:8px 0 0;font-size:14.5px;line-height:1.45">${t("applySub")}</p>
+    ${hasErr ? `<div class="info warn">${ic("alert")}<span>${t("fixErrors")}</span></div>` : ""}
+
+    <div class="fcard">
+      <div class="fsec">${ic("user")} ${t("secYou")}</div>
+      <div class="fgrid">${appInput("firstName", t("firstName"), { attrs: 'autocomplete="given-name"' })}${appInput("lastName", t("lastName"), { attrs: 'autocomplete="family-name"' })}</div>
+      ${appInput("email", t("email"), { type: "email", attrs: 'inputmode="email" autocomplete="email"', ph: "name@example.com" })}
+      <div class="fg ${ui.appErrors.phone ? "has-err" : ""}" data-fg="phone">${appLabel("phone", t("phone"))}
+        <div class="phone">
+          <select data-app="phoneCode" class="field" aria-label="Country code">${cfg.phoneCodes.map(([c, n]) => `<option value="${c}" ${a.phoneCode === c ? "selected" : ""}>${c} ${n}</option>`).join("")}</select>
+          <input id="ap_phone" data-app="phone" class="field" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="7123 456789" value="${esc(a.phone)}">
+        </div>${appErr("phone")}</div>
+      ${appInput("school", t("school"), { ph: t("schoolPh") })}
+      ${appInput("nationality", t("nationality"), { optional: true, ph: t("nationalityPh") })}
+    </div>
+
+    <div class="fcard">
+      <div class="fsec">${ic("building")} ${t("secStay")}</div>
+      <div class="fgrid">
+        ${appSelect("city", t("city"), CITIES.map(c => [c, c]), { ph: t("selectCity") })}
+        ${appSelect("residence", t("residence"), resOpts, { optional: true, ph: a.city ? t("anyRes") : t("cityFirst"), disabled: !a.city })}
+      </div>
+      <div class="fg"><label class="flabel">${t("roomType")} <span class="opt">${t("optional")} · ${t("selectAll")}</span></label>
+        <div class="rooms">${cfg.roomTypes.map(r => `<button type="button" class="${a.roomTypes.includes(r.id) ? "on" : ""}" data-action="appRoom" data-v="${r.id}" aria-pressed="${a.roomTypes.includes(r.id)}">${a.roomTypes.includes(r.id) ? ic("check") : ""}${esc(L(r))}</button>`).join("")}</div>
+      </div>
+      <div class="fgrid">
+        ${appInput("checkIn", t("checkInDate"), { type: "date", attrs: `min="${todayIso()}"` })}
+        ${appInput("weeks", t("weeks"), { type: "number", attrs: `inputmode="numeric" min="${cfg.minWeeks}" max="${cfg.maxWeeks}"`, ph: "e.g. 44", hint: t("weeksHint", cfg.minWeeks, cfg.maxWeeks) })}
+      </div>
+      ${appSelect("budget", t("budget"), cfg.budgets.map(b => [b.id, L(b)]), { optional: true, ph: t("selectRange") })}
+    </div>
+
+    <div class="fcard">
+      <div class="fsec">${ic("chat")} ${t("secMore")}</div>
+      <div class="fg">${appLabel("note", t("notes"), true)}
+        <textarea id="ap_note" data-app="note" class="field" maxlength="1000" placeholder="${esc(t("notesPh"))}">${esc(a.note)}</textarea></div>
+      <div class="fg ${ui.appErrors.consent ? "has-err" : ""}" data-fg="consent">
+        <label class="consent"><input type="checkbox" data-app="consent" ${a.consent ? "checked" : ""}>
+          <span>${t("consent", cfg.termsUrl, cfg.privacyUrl)}</span></label>${appErr("consent")}</div>
+    </div>
+
+    <button class="btn btn--red" style="margin-top:18px" data-action="submitApp">${t("submitApp")}</button>
+    <p class="hint" style="text-align:center;margin-top:10px">${t("applyNext")}</p>
+
+    ${mine.length ? `<h3 class="h3 sec">${t("myApps")} <small>${mine.length}</small></h3>
+      <div class="card">${mine.map(x => `<button class="reqrow" data-action="push" data-view="appDone" data-id="${x.id}">
+        <span class="rt"><b>${esc(x.stay.residenceName || x.stay.city)}</b><small>${x.id} · ${fmtDT(x.createdAt)}</small></span>
+        <span class="status new">${stLabel("new")}</span>${ic("chev")}</button>`).join("")}</div>` : ""}
+  </section>`;
+}
+function validateApp(a) {
+  const e = {}, req = t("required"), cfg = APP_DATA.application;
+  ["firstName", "lastName", "school", "city", "checkIn"].forEach(k => { if (!String(a[k]).trim()) e[k] = req; });
+  if (!a.email.trim()) e.email = req; else if (!/^\S+@\S+\.\S+$/.test(a.email.trim())) e.email = t("emailInvalid");
+  if (!a.phone.trim()) e.phone = req; else if (!/^[\d\s()-]{6,}$/.test(a.phone.trim())) e.phone = t("phoneInvalid");
+  if (!String(a.weeks).trim()) e.weeks = req;
+  else if (!(+a.weeks >= cfg.minWeeks && +a.weeks <= cfg.maxWeeks)) e.weeks = t("weeksHint", cfg.minWeeks, cfg.maxWeeks);
+  if (a.checkIn && a.checkIn < todayIso()) e.checkIn = t("datePast");
+  if (!a.consent) e.consent = t("consentReq");
+  return e;
+}
+function screenAppDone(id) {
+  const x = state.applications.find(a => a.id === id);
+  if (!x) return `<div class="empty">—</div>`;
+  const rooms = x.stay.roomTypes.map(en => L(APP_DATA.application.roomTypes.find(r => r.en === en))).join(", ");
+  const budget = x.stay.weeklyBudget ? L(APP_DATA.application.budgets.find(b => b.en === x.stay.weeklyBudget)) : "—";
+  const row = (k, v) => `<div class="sumrow"><span>${k}</span><b>${v}</b></div>`;
+  return `
+  <div class="success"><div class="tick">${ic("check")}</div><h1>${t("appReceived")}</h1><p>${t("appReceivedSub")}</p></div>
+  <section class="pad">
+    <div class="card req">
+      <div class="hd"><h3>${t("appSummary")}</h3><span class="status new">${stLabel("new")}</span></div>
+      <div style="margin-top:8px">
+        ${row(t("sumName"), esc(x.applicant.fullName))}
+        ${row(t("email"), esc(x.applicant.email))}
+        ${row(t("phone"), esc(x.applicant.phone))}
+        ${row(t("school"), esc(x.applicant.school))}
+        ${x.applicant.nationality ? row(t("nationality"), esc(x.applicant.nationality)) : ""}
+        ${row(t("city"), esc(x.stay.city))}
+        ${row(t("residence"), esc(x.stay.residenceName || t("anyRes")))}
+        ${row(t("roomType"), esc(rooms || "—"))}
+        ${row(t("checkInDate"), fmtDate(x.stay.checkInDate))}
+        ${row(t("weeksShort"), t("weeksN", x.stay.lengthOfStayWeeks))}
+        ${row(t("budget"), esc(budget))}
+        ${x.notes ? row(t("notes"), esc(x.notes)) : ""}
+      </div>
+      <div class="id"><span>${t("appId")} <b>${x.id}</b></span><span>${fmtDT(x.createdAt)}</span></div>
+    </div>
+    <details class="dev"><summary>${t("payload")}</summary><pre>${esc(JSON.stringify(x, null, 2))}</pre></details>
+    <div style="display:grid;gap:10px;margin-top:18px">
+      <button class="btn btn--navy" data-action="tab" data-tab="stay">${t("backStay")}</button>
+      <button class="btn btn--ghost" data-action="tab" data-tab="home">${t("backHome")}</button>
+    </div>
+  </section>`;
 }
 
 /* ------------------------------ Sheets ----------------------------- */
@@ -1234,10 +1592,11 @@ function closeSheet() { ui.sheet = null; render({ keepScroll: true }); }
 
 /* ------------------------------ Toast ------------------------------ */
 let toastTimer;
-function toast(msg) {
+function toast(msg, icon) {
   let el = document.querySelector(".toast");
   if (!el) { el = document.createElement("div"); el.className = "toast"; document.getElementById("screen").appendChild(el); }
-  el.innerHTML = ic("check") + `<span>${esc(msg)}</span>`;
+  el.innerHTML = ic(icon || "check") + `<span>${esc(msg)}</span>`;
+  el.classList.toggle("warn", icon === "alert");
   requestAnimationFrame(() => el.classList.add("show"));
   clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("show"), 2400);
 }
@@ -1305,7 +1664,7 @@ document.addEventListener("click", e => {
     case "supCat": ui.sup.cat = el.dataset.cat; ui.sup.msg = document.getElementById("supMsg").value; render({ keepScroll: true }); break;
     case "submitSupport": {
       const msg = document.getElementById("supMsg").value.trim();
-      if (!msg) { toast(t("needText")); document.getElementById("supMsg").focus(); return; }
+      if (!msg) { toast(t("needText"), "alert"); document.getElementById("supMsg").focus(); return; }
       const team = APP_DATA.teams.support[ui.sup.cat];
       createRequest("support", { category: ui.sup.cat, message: msg }, team);
       ui.sup = { cat: "maintenance", msg: "" }; ui.sheet = null;
@@ -1325,19 +1684,73 @@ document.addEventListener("click", e => {
       toast(t("copied", code)); break;
     }
     case "reset": {
-      const lang = state.lang; state = defaultState(); state.lang = lang; save();
-      ui = { sheet: null, faqCat: "all", faqQ: "", resCity: "all", resQ: "", ext: { weeks: 4, note: "" }, sup: { cat: "maintenance", msg: "" } };
-      go("home"); toast(t("resetDone")); break;
+      const lang = state.lang, session = state.session; state = defaultState(); state.lang = lang; state.session = session;
+      ui = freshUi(); go("home"); toast(t("resetDone")); break;
+    }
+    case "login": {
+      const email = (document.getElementById("lgEmail").value || "").trim();
+      ui.loginEmail = email;
+      if (!/^\S+@\S+\.\S+$/.test(email)) { ui.loginErr = true; render(); document.getElementById("lgEmail").focus(); return; }
+      state.session = { mode: "user", email, firstName: nameFromEmail(email) };
+      ui.loginErr = false; ui.app = blankApp(); go("home"); break;
+    }
+    case "guest": state.session = { mode: "guest", email: null, firstName: "" }; ui.loginErr = false; ui.app = blankApp(); go("home"); break;
+    case "logout": state.session = null; nav.tab = "home"; nav.stack = []; ui = freshUi(); render({ anim: true }); break;
+    case "applyFor": {
+      const r = resById(el.dataset.id);
+      ui.app.city = r.city; ui.app.residence = r.soldOut ? "" : r.id; ui.appErrors = {};
+      go("apply"); break;
+    }
+    case "appRoom": {
+      const v = el.dataset.v, list = ui.app.roomTypes;
+      ui.app.roomTypes = list.includes(v) ? list.filter(x => x !== v) : list.concat(v);
+      render({ keepScroll: true }); break;
+    }
+    case "submitApp": {
+      ui.appErrors = validateApp(ui.app);
+      if (Object.keys(ui.appErrors).length) {
+        render({ keepScroll: true });
+        const first = document.querySelector(".has-err");
+        if (first) first.scrollIntoView({ block: "center", behavior: "smooth" });
+        toast(t("fixErrors"), "alert"); return;
+      }
+      const x = createApplication(ui.app);
+      const tEl = document.querySelector(".toast"); if (tEl) tEl.classList.remove("show");
+      const keep = blankApp(); keep.firstName = ui.app.firstName; keep.lastName = ui.app.lastName; keep.email = ui.app.email;
+      keep.phoneCode = ui.app.phoneCode; keep.phone = ui.app.phone; keep.school = ui.app.school; keep.nationality = ui.app.nationality;
+      ui.app = keep; ui.appErrors = {};
+      nav.tab = "apply"; nav.stack = [{ name: "appDone", id: x.id }]; render({ anim: true }); break;
     }
   }
 });
 document.addEventListener("input", e => {
   const id = e.target.id;
+  const key = e.target.dataset && e.target.dataset.app;
+  if (key) {
+    ui.app[key] = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+    if (ui.appErrors[key]) {                       // clear the error as soon as the field is edited
+      delete ui.appErrors[key];
+      const fg = document.querySelector(`[data-fg="${key}"]`);
+      if (fg) { fg.classList.remove("has-err"); const m = fg.querySelector(".errmsg"); if (m) m.remove(); }
+    }
+    if (key === "city") { ui.app.residence = ""; render({ keepScroll: true }); }
+    return;
+  }
   if (id === "faqSearch") { ui.faqQ = e.target.value; document.getElementById("faqList").innerHTML = faqList(); }
   if (id === "resSearch") { ui.resQ = e.target.value; document.getElementById("resList").innerHTML = resList(); }
   if (id === "extNote") ui.ext.note = e.target.value;
   if (id === "supMsg") ui.sup.msg = e.target.value;
   if (id === "arrTime") document.getElementById("lateNote").style.display = e.target.value >= "18:00" ? "" : "none";
+});
+document.addEventListener("change", e => {   // selects/checkboxes on older browsers
+  const key = e.target.dataset && e.target.dataset.app;
+  if (key && (e.target.tagName === "SELECT" || e.target.type === "checkbox")) {
+    const v = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+    if (ui.app[key] !== v) { ui.app[key] = v; if (key === "city") { ui.app.residence = ""; render({ keepScroll: true }); } }
+  }
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && (e.target.id === "lgEmail" || e.target.id === "lgPass")) { e.preventDefault(); document.querySelector('[data-action="login"]').click(); }
 });
 window.addEventListener("resize", renderPitch);
 
