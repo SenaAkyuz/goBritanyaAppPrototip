@@ -72,7 +72,7 @@ svg.i{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-widt
 .card{background:var(--card);border-radius:var(--r-lg);box-shadow:var(--shadow)}
 
 /* ---------- Tab bar ---------- */
-.tabbar{flex:none;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:0 6px calc(env(safe-area-inset-bottom) + 22px);position:relative;z-index:4}
+.tabbar{flex:none;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);padding:0 10px calc(env(safe-area-inset-bottom) + 22px);position:relative;z-index:4}
 .tab{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 2px;font-size:12px;font-weight:600;color:#3A4166;position:relative}
 .tab.on{color:var(--red)}
 .tab.on::before{content:"";position:absolute;top:-1px;left:22%;right:22%;height:3px;border-radius:0 0 3px 3px;background:var(--red)}
@@ -373,7 +373,8 @@ select.field{appearance:none;-webkit-appearance:none;background:#fff url("data:i
 select.field:disabled{opacity:.55}
 .has-err select.field{background-color:#FFF7F8}
 input[type=date].field{min-height:50px}
-.phone{display:grid;grid-template-columns:108px 1fr;gap:8px}
+.phone{display:grid;grid-template-columns:124px 1fr;gap:8px}
+.phone select.field{padding-left:12px;padding-right:30px;background-position:right 8px center}
 .rooms{display:flex;flex-wrap:wrap;gap:8px}
 .rooms button{padding:10px 14px;border-radius:999px;border:1.5px solid var(--line);font-weight:700;font-size:13.5px;background:#fff;display:inline-flex;gap:6px;align-items:center;color:#2A3156}
 .rooms button.on{background:var(--navy);border-color:var(--navy);color:#fff}
@@ -1074,7 +1075,7 @@ function appbar(title) {
   return `<header class="appbar"><button class="iconbtn" data-action="back" aria-label="Back">${ic("back")}</button><div class="title">${esc(title)}</div>${langToggle()}</header>`;
 }
 function tabbar() {
-  const tabs = [["home", "home", t("tabHome")], ["apply", "apply", t("tabApply")], ["stay", "bed", t("tabStay")], ["support", "headset", t("tabSupport")]];
+  const tabs = [["home", "home", t("tabHome")], ["stay", "bed", t("tabStay")], ["support", "headset", t("tabSupport")]];
   return `<nav class="tabbar">${tabs.map(([id, icon, lbl]) =>
     `<button class="tab ${nav.tab === id && !nav.stack.length ? "on" : ""} ${nav.tab === id && nav.stack.length ? "on" : ""}" data-action="tab" data-tab="${id}">${ic(icon)}<span>${lbl}</span></button>`).join("")}</nav>`;
 }
@@ -1086,7 +1087,8 @@ function render(opts = {}) {
   if (!state.session) { $app.innerHTML = screenLogin(); renderPitch(); return; }
   const top = nav.stack[nav.stack.length - 1];
   let title = null, body;
-  if (!top) body = { home: screenHome, apply: screenApply, stay: screenStay, support: screenSupport }[nav.tab]();
+  if (!top) body = { home: screenHome, stay: screenStay, support: screenSupport }[nav.tab]();
+  else if (top.name === "apply") { title = t("tabApply"); body = screenApply(); }
   else if (top.name === "appDone") { title = t("appDoneTitle"); body = screenAppDone(top.id); }
   else if (top.name === "extension") { title = t("extTitle"); body = screenExtension(); }
   else if (top.name === "request") { title = L(I18N[state.lang].reqTitle[(state.requests.find(r => r.id === top.id) || {}).type] || ""); body = screenRequest(top.id, top.fresh); }
@@ -1120,7 +1122,7 @@ function screenHome() {
       <div class="bar"><div style="width:${(n / tot) * 100}%"></div></div>
       <small>${t("checklistProgress", n, tot)}</small>
     </button>
-    <button class="apply-cta" data-action="tab" data-tab="apply">
+    <button class="apply-cta" data-action="push" data-view="apply">
       <span class="ico">${ic("apply")}</span>
       <span><b>${t("applyCta")}</b><small>${t("applyCtaSub")}</small></span>${ic("chev")}
     </button>
@@ -1699,7 +1701,7 @@ document.addEventListener("click", e => {
     case "applyFor": {
       const r = resById(el.dataset.id);
       ui.app.city = r.city; ui.app.residence = r.soldOut ? "" : r.id; ui.appErrors = {};
-      go("apply"); break;
+      push({ name: "apply" }); break;
     }
     case "appRoom": {
       const v = el.dataset.v, list = ui.app.roomTypes;
@@ -1719,7 +1721,7 @@ document.addEventListener("click", e => {
       const keep = blankApp(); keep.firstName = ui.app.firstName; keep.lastName = ui.app.lastName; keep.email = ui.app.email;
       keep.phoneCode = ui.app.phoneCode; keep.phone = ui.app.phone; keep.school = ui.app.school; keep.nationality = ui.app.nationality;
       ui.app = keep; ui.appErrors = {};
-      nav.tab = "apply"; nav.stack = [{ name: "appDone", id: x.id }]; render({ anim: true }); break;
+      nav.stack[nav.stack.length - 1] = { name: "appDone", id: x.id }; render({ anim: true }); break;
     }
   }
 });
